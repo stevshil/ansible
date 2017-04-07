@@ -1,8 +1,8 @@
 [jenkins]
-jenkins ansible_host=52.56.141.154
+jenkins ansible_host=52.56.190.192
 
 [puppet]
-puppet ansible_host=52.56.247.247
+puppet ansible_host=52.56.253.199
 
 [all]
 jenkins

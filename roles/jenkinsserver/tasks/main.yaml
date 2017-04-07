@@ -54,8 +54,9 @@
 
 - name: Copy base config
   copy:
-    src: "{{ role_path }}/files/jenkinsbase.tgz"
-    dest: /tmp
+    #src: "{{ role_path }}/files/jenkinsbase.tgz"
+    src: "{{ role_path }}/files/jenkins-essentials.tgz"
+    dest: /tmp/jenkinsbase.tgz
   when: configbase|failed
 
 - name: Install Jenkins
