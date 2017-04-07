@@ -1,0 +1,12 @@
+[Unit]
+Description=Jenkins Server
+After=syslog.target network.target
+
+[Service]
+Environment=JENKINS_BASE=/var/lib/jenkins
+Environment=HOME=/var/lib/jenkins
+Type=forking
+RemainAfterExit=yes
+WorkingDirectory=/var/lib/jenkins
+ExecStart=/bin/java -jar /usr/lib/jenkins/jenkins.war &
+User=jenkins

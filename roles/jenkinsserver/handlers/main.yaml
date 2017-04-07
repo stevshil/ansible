@@ -1,0 +1,4 @@
+- name: Jenkins Server Run
+  service: 
+    name: jenkins
+    state: started

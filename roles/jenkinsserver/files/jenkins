@@ -1,0 +1,51 @@
+#!/bin/bash
+
+# chkconfig: 2345 99 99
+# description: Jenkins service
+
+cd /var/lib/jenkins
+export JENKINS_BASEDIR=/var/lib/jenkins
+export HOME=/var/lib/jenkins
+case $1 in
+	start)
+		nohup sudo -u jenkins /bin/java -jar /usr/lib/jenkins/jenkins.war >/var/log/jenkins/output.log 2>/var/log/jenkins/error.log &
+		if (( $(ps -ef | grep jenkins | grep java | grep -v grep | wc -l) > 0 ))
+		then
+			echo "Jenkins has started"
+			exit 0
+		else	
+			exit 1
+		fi
+		;;
+	stop)
+		kill $(ps -ef | grep jenkins | grep -v grep | awk '{print $2}')
+		if (( $(ps -ef | grep jenkins | grep java | grep -v grep | wc -l) > 0 ))
+		then
+			echo "Jenkins has stopped"
+			exit 0
+		else	
+			echo "Jenkins failed to stop"
+			exit 1
+		fi
+		;;
+	restart)
+		kill $(ps -ef | grep jenkins | grep -v grep | awk '{print $2}')
+		if (( $(ps -ef | grep jenkins | grep java | grep -v grep | wc -l) > 0 ))
+		then
+			nohup sudo -u jenkins /bin/java -jar /usr/lib/jenkins/jenkins.war >/var/log/jenkins/output.log 2>/var/log/jenkins/error.log &
+			if (( $(ps -ef | grep jenkins | grep java | grep -v grep | wc -l) > 0 ))
+			then
+				echo "Jenkins has started"
+				exit 0
+			else	
+				exit 1
+			fi
+		else
+			echo "Jenkins failed to stop"
+			exit 1
+		fi
+		;;
+	*)
+		echo "Not a valid option"
+		exit 2
+esac
