@@ -34,6 +34,11 @@
     minute: "*/10"
     job: "cd /etc; git clone https://github.com/stevshil/puppettrain.git >>/var/log/messages 2>&1"
 
+- name: Clone the repo
+  git:
+    repo: https://github.com/stevshil/puppettrain.git
+    dest: /etc/puppetlabs/puppettrain
+
 - name: Check if /etc/puppetlabs/code is a symlink to /etc/puppetlabs/puppettrain/code
   stat:
     path: /etc/puppetlabs/code
@@ -43,11 +48,16 @@
   file:
     path: /etc/puppetlabs/code
     state: absent
-  when: codedir.stat.islnk == False
+  when: codedir.stat.exists == False or codedir.stat.islnk == False
 
 - name: Create symlink to code
   file:
     src: /etc/puppetlabs/puppettrain/code
     dest: /etc/puppetlabs/code
     state: link
-  when: codedir.stat.islnk == False
+  when: codedir.stat.exists == False or codedir.stat.islnk == False
+
+- name: Start puppet
+  service:
+    name: puppetserver
+    state: started

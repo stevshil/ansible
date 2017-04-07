@@ -44,6 +44,9 @@
     dest: /etc/systemd/system/multi-user.target.wants/jenkins.service
     state: link
 
+- name: Ensure systemd is up to date
+  command: systemctl daemon-reload
+
 - name: Check if config already in place
   command: ls /var/lib/jenkins/.jenkins/plugins
   ignore_errors: true
@@ -76,7 +79,8 @@
 
 - name: Extract base config
   command: /bin/tar xvf /tmp/jenkinsbase.tgz -C /var/lib/jenkins/.jenkins
-  when: configbase|failed and chkbase|failed
+  when: chkbase|succeeded
+  register: extractbase
 
 - name: Set jenkins user as owner of directory /var/lib/jenkins
   file:
@@ -88,7 +92,7 @@
   file:
     path: /tmp/jenkinsbase.tgz
     state: absent
-  when: configbase|failed
+  when: extractbase|succeeded
 
 - name: Enable Jenkins
   service:

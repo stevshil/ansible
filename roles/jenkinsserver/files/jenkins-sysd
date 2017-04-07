@@ -5,7 +5,7 @@ After=syslog.target network.target
 [Service]
 Environment=JENKINS_BASE=/var/lib/jenkins
 Environment=HOME=/var/lib/jenkins
-Type=forking
+Type=simple
 RemainAfterExit=yes
 WorkingDirectory=/var/lib/jenkins
 ExecStart=/bin/java -jar /usr/lib/jenkins/jenkins.war &
