@@ -1,0 +1,12 @@
+---
+- hosts: puppet
+  become: true
+  become_user: root
+  roles:
+    - puppetserver
+
+- hosts: jenkins
+  become: true
+  become_user: root
+  roles:
+    - jenkinsserver
