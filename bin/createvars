@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Run in the parent directory of this bin directory
+puppetIP=$(awk -F"=" '$0 ~ /^puppet/ {print $2}' hosts  | grep -v '^[    ]*$')
+
+aws ec2 describe-instances | jq ".[][].Instances[] | select(.PublicIpAddress == \"$puppetIP\") | .PrivateDnsName" | sed 's/"//g' >puppethost
+
