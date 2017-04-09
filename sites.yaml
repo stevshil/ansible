@@ -10,3 +10,9 @@
   become_user: root
   roles:
     - jenkinsserver
+
+- hosts: webserver
+  become: true
+  become_user: root
+  roles:
+    - webserver

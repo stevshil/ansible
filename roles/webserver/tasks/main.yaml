@@ -1,0 +1,26 @@
+- name: Install git
+  yum:
+    name: git
+    state: latest
+
+- name: Check if puppet repo installed
+  command: ls /etc/yum.repos.d/puppetlabs-pc1.repo
+  register: puppetlabsrepo
+  ignore_errors: yes
+
+- name: Install puppet repo
+  command: /usr/bin/yum -y install https://yum.puppetlabs.com/puppetlabs-release-pc1-el-7.noarch.rpm
+  when: puppetlabsrepo|failed
+
+- name: Install puppet client
+  yum:
+    name: puppet-agent
+    state: latest
+
+- name: Set puppet.conf
+  template:
+    src: "{{ role_path }}/templates/puppet.conf.j2"
+    dest: /etc/puppetlabs/puppet/puppet.conf
+    owner: root
+    group: root
+    mode: 0644

@@ -77,6 +77,7 @@
 - name: Check if archive is on server from previous failure
   command: /bin/ls /tmp/jenkinsbase.tgz
   register: chkbase
+  ignore_errors: yes
 
 - name: Extract base config
   command: /bin/tar xvf /tmp/jenkinsbase.tgz -C /var/lib/jenkins/.jenkins

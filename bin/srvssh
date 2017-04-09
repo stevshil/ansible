@@ -1,0 +1,12 @@
+#!/bin/bash
+
+if (( $# < 1 ))
+then
+	echo "SYNTAX: $0 ansiblehostname" 1>&2
+	exit 1
+fi
+
+IP=$(grep $1 hosts | awk -F= '{print $2}' | grep -v '^[ 	]*$')
+PEM="/home/steve/Documents/Documents/TPS/Work/Automation Logic/Course/Content/Trainer/15-Cloud/steveshilling-london.pem"
+
+ssh -o StrictHostKeyChecking=no -i "$PEM" ec2-user@$IP
