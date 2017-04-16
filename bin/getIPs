@@ -1,2 +1,4 @@
 #!/bin/bash
-aws ec2 describe-instances | grep PublicIpAddress | awk -F":" '{print $2}' | sed 's/[ ",]//g'
+#aws ec2 describe-instances | grep PublicIpAddress | awk -F":" '{print $2}' | sed 's/[ ",]//g'
+
+aws ec2 describe-instances | jq '.[][].Instances[] | "\(.InstanceType)  -  \(.PublicIpAddress)"'
