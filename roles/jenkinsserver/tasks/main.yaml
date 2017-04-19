@@ -105,3 +105,46 @@
   service:
     name: jenkins
     state: started
+
+- name: Install git, gem and ruby
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - git
+    - ruby
+    - gem
+
+- name: Add kitchen gems
+  gem:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - rake
+    - bundler
+    - test-kitchen
+    - kitchen-puppet
+    - kitchen-ec2
+    - puppet
+    - puppet-lint
+    - puppet-syntax
+    - puppetlabs_spec_helper
+    - rspec
+    - rspec-puppet
+    - rspec-puppet-utils
+    - rspec-support
+    - serverspec
+
+- name: Create Jenkins .ssh directory
+  file:
+    path: /var/lib/jenkins/.ssh
+    state: directory
+    mode: 0700
+
+- name: Copy ssh key
+  copy:
+    src: /home/steve/.aws/steveshilling-london.pem
+    dest: /var/lib/jenkins/.ssh/id_rsa
+    owner: jenkins
+    group: jenkins
+    mode: 0600
