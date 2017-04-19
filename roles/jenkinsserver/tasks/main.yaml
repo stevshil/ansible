@@ -116,6 +116,8 @@
     - gem
 
 - name: Add kitchen gems
+  become: yes
+  become_user: jenkins
   gem:
     name: "{{ item }}"
     state: latest
