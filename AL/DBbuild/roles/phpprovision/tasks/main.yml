@@ -1,0 +1,29 @@
+- name: Install Apache
+  yum:
+    name: httpd
+    state: installed
+    
+- name: Install other software
+  yum:
+    name: "{{ item }}"
+    state: installed
+  with_items:
+    - php
+    - mod_ssl
+    - php-mysqlnd
+    - php-devel
+    - php-gd
+    - git
+
+- name: Start Apache
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Install PHP application
+  git:
+    repo:  https://bitbucket.org/JangleFett/pubsphp.git
+    dest: /var/www/html
+    update: yes
+    clone: yes

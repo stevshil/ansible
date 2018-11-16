@@ -1,0 +1,30 @@
+- name: Petclinic facts
+  ec2_instance_facts:
+    filters:
+      "tag:Name": "Stevespetclinic"
+    region: "{{ region }}"
+  register: ec2instance
+
+- debug:
+    msg: "Destroying: {{ ec2instance.instances[0].instance_id }}"
+
+- name: Remove Petcinic server
+  ec2:
+    state: absent
+    instance_ids: "{{ ec2instance.instances[0].instance_id }}"
+    region: "{{ region }}"
+
+- name: Remove Key Pair
+  ec2_key:
+    name: "{{ keyname }}"
+    region: "{{ region }}"
+    state: absent
+
+- debug:
+    msg: "Removing {{ groups['petclinic'][0] }} from inventory"
+
+- name: remove Petclinic server from inventory
+  lineinfile:
+     dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+     state: absent
+     regexp: "{{ groups['petclinic'][0] }}"

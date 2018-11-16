@@ -1,0 +1,22 @@
+- name: Install Apache web server
+  yum:
+    name: httpd
+    state: installed
+- name: Check Apache is started and start it if not
+  service:
+    name: httpd
+    enabled: yes
+    state: started
+  ignore_errors: yes
+- name: Get HTTP package version
+  shell: rpm -qa | grep 'httpd-[0-9]' | awk -F- '{print $2}' | awk -F. 'BEGIN{OFS="."}{print $1,$2}'
+  register: httpd_version
+- name: Apply Apache configuration
+  copy:
+    src: "files/httpd/conf/httpd-{{ httpd_version.stdout }}.conf"
+    dest: /etc/httpd/conf/httpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    force: true
+  notify: restart apache

@@ -1,0 +1,11 @@
+- hosts: ec2
+  connection: local
+  gather_facts: false
+  roles:
+    - vaultserver
+
+- hosts: vault
+  become: True
+  gather_facts: True
+  roles:
+    - vaultprovision

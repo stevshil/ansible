@@ -1,0 +1,5 @@
+- import_playbook: vpc.yml
+- import_playbook: jenkins.yml
+- import_playbook: jenkinsprov.yml
+- import_playbook: db.yml
+- import_playbook: webservers.yml

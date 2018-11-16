@@ -1,0 +1,5 @@
+docroot: /usr/share/nginx/html
+docdata: "<h1>Hello world</h1>"
+nginxuser: nginx
+nginxport: 80
+servername: _

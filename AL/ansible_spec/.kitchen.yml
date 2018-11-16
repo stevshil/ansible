@@ -1,0 +1,24 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: ansible_playbook
+  hosts: all
+  require_ansible_repo: true
+  ansible_verbose: true
+  ansible_version: latest
+  require_chef_for_busser: false
+  playbook: site.yml
+
+platforms:
+  - name: centos-7.2
+    driver_plugin: vagrant
+    driver_config:
+      box: bento/centos-7.2
+
+verifier:
+  ruby_bindir: '/usr/bin/'
+
+suites:
+  - name: default

@@ -1,0 +1,18 @@
+#!/bin/bash
+#description: Start/stop Vault service
+#chkconfig: 2345 99 99
+
+case $1 in
+  start)
+    nohup /usr/local/bin/vault server -config /usr/local/etc/vault.cfg &
+    ;;
+  stop)
+    kill $(ps -ef | grep -v grep | grep vault)
+    ;;
+  *)
+    echo "SYNTAX: $0 [start|stop]"
+    ;;
+esac
+
+# Check SSL key metadata
+# openssl x509 -in cerfile.cer -noout -text

@@ -1,0 +1,32 @@
+- name: Start ec2 Instance
+  ec2:
+    key_name: academy_jan_2018
+    instance_type: t2.micro
+    image: ami-d834aba1
+    wait: yes
+    group: Academy_Steve
+    count: 1
+    vpc_subnet_id: subnet-ac9d9ada
+    assign_public_ip: yes
+    instance_initiated_shutdown_behavior: stop
+    instance_tags: 
+      Name: SteveAnsibleTest
+    region: eu-west-1
+    zone: eu-west-1a
+  register: testsrv
+
+- name: Wait for instance to be ready for ssh
+  wait_for:
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 60
+    timeout: 320
+    state: started
+  with_items: "{{ testsrv.instances }}"
+
+- name: Add to inventory
+  lineinfile:
+    dest: ./inventory
+    insertafter: '^\[aws\]'
+    line: "{{ item.public_dns_name }}"
+  with_items: "{{ testsrv.instances }}"

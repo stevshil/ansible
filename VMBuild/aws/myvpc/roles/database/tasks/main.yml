@@ -1,0 +1,32 @@
+- name: Make MySQL Instance in RDS
+  rds:
+    command: create
+    instance_name: steve-academy-db
+    db_engine: MySQL
+    size: 5
+    instance_type: "{{ aws_db_instance_size }}"
+    username: "{{ aws_db_admin }}"
+    password: "{{ aws_db_admin_pw }}"
+    db_name: "{{ aws_db_appname }}"
+    engine_version: "{{ aws_db_version }}"
+    zone: "{{ aws_region }}a"
+    wait: yes
+    wait_timeout: 1200
+    region: "{{ aws_region }}"
+    tags:
+      Name: SteveAcademyStackMySQL
+  register: dbsrv
+
+- name: Wait for DB to be ready
+  wait_for:
+    host: "{{ rds.instance.endpoint }}"
+    port: 3306
+    delay: 60
+    timeout: 600
+    state: available
+
+- name: Add to inventory
+  lineinfile:
+    dest: ./inventory
+    insertafter: '^\[databases\]'
+    line: "{{ rds.instance.endpoint }}"

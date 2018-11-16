@@ -1,0 +1,23 @@
+- hosts: ec2
+  connection: local
+  gather_facts: false
+  roles:
+    - ec2
+
+- hosts: petclinic
+  become: True
+  gather_facts: True
+  roles:
+    - provision
+
+- hosts: ami
+  connection: local
+  gather_facts: false
+  roles:
+    - ami
+
+- hosts: remove
+  connection: local
+  gather_facts: false
+  roles:
+    - destroy

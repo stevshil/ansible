@@ -1,0 +1,3 @@
+- hosts: aws
+  roles:
+    - rmec2instance

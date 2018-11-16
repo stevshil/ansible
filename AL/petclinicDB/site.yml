@@ -1,0 +1,11 @@
+- hosts: rds
+  connection: local
+  gather_facts: false
+  roles:
+    - rds
+
+- hosts: remove
+  connection: local
+  gather_facts: false
+  roles:
+    - destroy

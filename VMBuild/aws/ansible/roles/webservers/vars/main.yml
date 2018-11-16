@@ -1,0 +1,5 @@
+droot: /var/www/html
+statusmsg: Welcome to ANSIBLE
+ansible_become_user: root
+ansible_become: yes
+ansible_become_method: sudo

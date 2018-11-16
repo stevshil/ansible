@@ -1,0 +1,26 @@
+- name: Copy SSH private key
+  copy:
+    src: ~/.ssh/academy_jan_2018.pem
+    dest: /home/ec2-user/.ssh/id_rsa
+    owner: ec2-user
+    group: ec2-user
+    mode: 0600
+
+- name: Install Apache
+  yum:
+    name: httpd
+    state: latest
+
+- name: Start Apache
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+
+- name: Add welcome page
+  copy:
+    src: files/index.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644

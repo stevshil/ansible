@@ -1,0 +1,24 @@
+- name: Vault facts
+  ec2_instance_facts:
+    filters:
+      "tag:Name": "StevesVault"
+    region: "{{ region }}"
+  register: ec2instance
+
+- debug:
+    msg: "Destroying: {{ ec2instance.instances[0].instance_id }}"
+
+- name: Remove PHP server
+  ec2:
+    state: absent
+    instance_ids: "{{ ec2instance.instances[0].instance_id }}"
+    region: "{{ region }}"
+
+- debug:
+    msg: "Removing {{ groups['vault'][0] }} from inventory"
+
+- name: remove Vault server from inventory
+  lineinfile:
+     dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+     state: absent
+     regexp: "{{ groups['vault'][0] }}"

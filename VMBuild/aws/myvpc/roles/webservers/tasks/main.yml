@@ -1,0 +1,101 @@
+- name: Create ELB
+  ec2_elb_lb:
+    name: petclinic
+    cross_az_load_balancing: yes
+    region: "{{ aws_region }}"
+    state: present
+    subnets: "{{ web_subnets }}"
+    security_group_ids: "{{ web_sg }}"
+    connection_draining_timeout: 60
+    listeners:
+      - protocol: http
+        load_balancer_port: 80
+        instance_port: 80
+    health_check:
+        ping_protocol: tcp # options are http, https, ssl, tcp
+        ping_port: 80
+        response_timeout: 5 # seconds
+        interval: 30 # seconds
+        unhealthy_threshold: 5
+        healthy_threshold: 5
+    tags:
+      Name: SteveVpcLB
+  register: myelb
+
+- name: Create launch configuration
+  ec2_lc:
+    name: web_lc
+    state: present
+    image_id: "{{ aws_amiid }}"
+    key_name: "{{ aws_keypair }}"
+    region: "{{ aws_region }}"
+    security_groups: "{{ web_sg }}"
+    instance_type: t2.micro
+    assign_public_ip: yes
+    vpc_id: "{{ aws_vpcid }}"
+    user_data: |
+      #!/bin/bash
+      yum -y install httpd
+      service httpd start
+      chkconfig httpd on
+
+- name: Create asg
+  ec2_asg:
+    name: web_asg
+    launch_config_name: web_lc
+    health_check_period: 60
+    health_check_type: ELB
+    replace_all_instances: yes
+    min_size: 1
+    max_size: 3
+    desired_capacity: 1
+    region: "{{ aws_region }}"
+    load_balancers: petclinic
+    vpc_zone_identifier: "{{ web_subnets }}"
+    tags:
+      - Name: "SteveVpcASG"
+
+- name: create scale down policy
+  ec2_scaling_policy:
+    state: present
+    region: "{{ aws_region }}"
+    name: scale-down-policy
+    adjustment_type: ChangeInCapacity
+    asg_name: "web_asg"
+    scaling_adjustment: -1
+    min_adjustment_step: -1
+    cooldown: 300
+    tags:
+      - Name: SteveVPCscaling_policy
+  register: scale_down_policy
+
+- name: create scale up policy
+  ec2_scaling_policy:
+    state: present
+    region: "{{ aws_region }}"
+    name: scale-up-policy
+    adjustment_type: ChangeInCapacity
+    asg_name: "web_asg"
+    scaling_adjustment: 1
+    min_adjustment_step: 1
+    cooldown: 300
+    tags:
+      - Name: SteveVPCscaling_policy
+  register: scale_up_policy
+
+- name: Add to inventory
+  lineinfile:
+    dest: ./inventory
+    insertafter: '^\[loadbalancers\]'
+    line: "{{ item.dns_name }}"
+  with_items: "{{ myelb.elbs }}"
+
+- name: Saving state
+  lineinfile:
+    path: ./state.dat
+    insertafter: EOF
+    line: "{{ item }}"
+    create: yes
+    state: present
+  with_items:
+    - "{{ myelb.elbs }}"

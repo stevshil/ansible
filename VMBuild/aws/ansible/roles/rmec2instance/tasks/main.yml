@@ -1,0 +1,20 @@
+- name: Get instance id
+  shell: wget -q -O - http://169.254.169.254/latest/meta-data/instance-id
+  register: testsrv
+
+- name: Terminate ec2 Instance
+  local_action: 
+    module: ec2
+    key_name: academy_jan_2018
+    region: eu-west-1
+    instance_ids: "{{ testsrv.stdout }}"
+    state: absent
+  delegate_to: 127.0.0.1
+
+- name: Remove from inventory
+  local_action: 
+    module: lineinfile
+    dest: ./inventory
+    regexp: "{{ inventory_hostname }}"
+    state: absent
+  delegate_to: 127.0.0.1

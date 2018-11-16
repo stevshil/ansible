@@ -1,0 +1,33 @@
+- name: Start Jenkins Instance
+  ec2:
+    key_name: "{{ aws_keypair }}"
+    instance_type: t2.micro
+    image: "{{ aws_amiid }}"
+    wait: yes
+    group_id: "{{ jenkins_sg }}"
+    count: 1
+    vpc_subnet_id: "{{ public_subnet_a }}"
+    assign_public_ip: yes
+    instance_profile_name: jenkinsadmin
+    instance_initiated_shutdown_behavior: stop
+    instance_tags:
+      Name: SteveAcademyStackJenkins
+    region: "{{ aws_region }}"
+    zone: "{{ aws_region }}a"
+  register: jenkinssrv
+
+- name: Wait for Jenkins to be ready for ssh
+  wait_for:
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 60
+    timeout: 320
+    state: started
+  with_items: "{{ jenkinssrv.instances }}"
+
+- name: Add to inventory
+  lineinfile:
+    dest: ./inventory
+    insertafter: '^\[jenkins\]'
+    line: "{{ item.public_dns_name }}"
+  with_items: "{{ jenkinssrv.instances }}"

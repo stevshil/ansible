@@ -1,0 +1,15 @@
+- name: Create s3 Bucket
+  aws_s3:
+    bucket: stevessecretbucket
+    mode: create
+    region: "{{ region }}"
+
+- name: Create Dev/Prod Directories
+  aws_s3:
+    bucket: stevessecretbucket
+    object: "{{ item }}"
+    mode: create
+    region: "{{ region }}"
+  with_items:
+    - /dev
+    - /prod

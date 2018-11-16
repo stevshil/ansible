@@ -1,0 +1,4 @@
+- import_playbook: ansible.yml
+- import_playbook: jenkins.yml
+- import_playbook: webservers.yml
+- import_playbook: ec2instance.yml

@@ -1,0 +1,28 @@
+ansible_ssh_private_key_file: "{{ lookup('env','HOME') }}/.aws/automationlogic/steveshilling-nvirginia.pem"
+ansible_ssh_user: ec2-user
+ansible_connection: ssh
+ansible_ssh_common_args: -o StrictHostKeyChecking=no
+ansible_become_user: root
+ansible_become: yes
+ansible_become_method: sudo
+
+aws_region: us-east-1
+aws_db_admin: root
+aws_db_admin_pw: secret123
+aws_db_appname: petclinic
+aws_db_version: 5.7
+aws_db_instance_size: db.m3.medium
+aws_vpc_cidr: 10.0.0.0/16
+aws_vpc_public_cidra: 10.0.1.0/24
+aws_vpc_private_cidra: 10.0.2.0/24
+aws_vpc_public_cidrb: 10.0.3.0/24
+aws_vpc_private_cidrb: 10.0.4.0/24
+aws_keypair: steveshilling
+aws_amiid: ami-97785bed
+jenkins_sg: sg-88bd36ff
+public_subnet_a: subnet-d9c484e6
+web_sg: sg-88bd36ff
+web_subnets:
+  - subnet-d9c484e6
+  - subnet-c2616d89
+aws_vpcid: vpc-c8f306b3

@@ -1,0 +1,22 @@
+- name: Software required to make Jenkins work
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ jenkins_software }}"
+
+- name: Python libraries
+  pip:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ jenkins_pip }}"
+
+- name: Install Maven
+  unarchive:
+    src: http://mirror.vorboss.net/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: Set Maven in path
+  copy:
+    dest: /etc/profile.d/mvn.sh
+    content: export PATH=$PATH:/opt/apache-maven-3.6.0/bin

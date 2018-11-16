@@ -1,0 +1,65 @@
+- name: Create RDS MariaDB instance
+  rds:
+    command: create
+    instance_name: "{{ dbname }}"
+    db_engine: mariadb
+    engine_version: 10.3.8
+    multi_zone: no
+    wait_timeout: 600
+    vpc_security_groups: "{{ vpc_security_groups }}"
+    subnet: "{{ subnet }}"
+    db_name: pubs
+    region: "{{ region }}"
+    size: 5
+    wait: yes
+    instance_type: db.m4.large
+    username: "{{ myDBuser }}"
+    password: "{{ myDBpassword }}"
+    publicly_accessible: yes
+    tags:
+      Environment: "{{ env }}"
+      Name: "{{ dbname }}"
+
+- name: Get RDS Endpoint if already created
+  rds:
+    command: facts
+    instance_name: "{{ dbname }}"
+    region: "{{ region }}"
+  register: myrds
+
+- debug:
+    msg:
+      - "{{ myrds.instance.endpoint }}"
+      - "{{ myDBuser }}"
+      - "{{ myDBpassword }}"
+      - "{{ dbname }}"
+
+- name: Wait for instance to be ready
+  wait_for:
+    host: "{{ myrds.instance.endpoint }}"
+    port: 3306
+    delay: 60
+    timeout: 600
+    state: started
+  when: myrds.instance.endpoint is undefined
+
+- name: Create Petclinic Schema
+  mysql_db:
+    state: import
+    name: "{{ dbname }}"
+    login_user: "{{ myDBuser }}"
+    login_password: "{{ myDBpassword }}"
+    login_host: "{{ myrds.instance.endpoint }}"
+    target: "{{ role_path }}/files/schema.sql"
+
+- name: Populate Petclinic
+  mysql_db:
+    state: import
+    name: "{{ dbname }}"
+    login_user: "{{ myDBuser }}"
+    login_password: "{{ myDBpassword }}"
+    login_host: "{{ myrds.instance.endpoint }}"
+    target: "{{ role_path }}/files/data.sql"
+
+- debug:
+    var: myrds.instance.endpoint

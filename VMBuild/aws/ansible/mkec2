@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if ansible-playbook ec2instance.yml -i inventory
+then
+	if ! ansible-playbook ec2provision.yml -i inventory
+	then
+		echo "Failed to provision instance"
+	fi
+else
+	echo "Failed to create instance"
+fi

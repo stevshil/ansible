@@ -1,0 +1,24 @@
+- name: Petclinic facts
+  ec2_instance_facts:
+    filters:
+      "tag:Name": "Stevespetclinic"
+      "instance-state-name": "running"
+    region: "{{ region }}"
+  register: ec2instance
+
+- debug:
+    msg: "{{ ec2instance }}"
+
+- name: Create AMI
+  ec2_ami:
+    instance_id: "{{ ec2instance.instances[0].instance_id }}"
+    wait: yes
+    name: "{{ keyname }}"
+    description: Petclinic Application
+    region: "{{ region }}"
+    tags:
+      Name: Petclinic VM
+  register: amiinfo
+
+- debug:
+    msg: "AMI ID: {{ amiinfo.image_id }}"

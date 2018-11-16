@@ -1,0 +1,21 @@
+[webservers]
+$APACHE1
+$APACHE2
+
+[loadbalancers]
+$LB
+
+[ansible]
+$ANSIBLE
+
+[jenkins]
+$JENKINS
+
+[databases]
+$MYSQL
+
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=ec2-user
+# ansible_ssh_pass=vagrant
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'

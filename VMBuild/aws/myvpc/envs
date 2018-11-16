@@ -1,0 +1,4 @@
+EC2_ACCESS_KEY=$(grep aws_access_key_id ~/.aws/credentials | awk -F= '{print $2}' | sed 's/ //g')
+EC2_SECRET_KEY=$(grep aws_secret_access_key ~/.aws/credentials | awk -F= '{print $2}' | sed 's/ //g')
+
+export EC2_ACCESS_KEY EC2_SECRET_KEY

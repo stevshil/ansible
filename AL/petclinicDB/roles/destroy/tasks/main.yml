@@ -1,0 +1,5 @@
+- name: Remove RDS
+  rds:
+    command: delete
+    instance_name: "{{ dbname }}"
+    region: "{{ region }}"

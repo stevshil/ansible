@@ -1,0 +1,9 @@
+[webservers]
+  web1.al.local ansible_host=192.168.1.101 ansible_user=vagrant ansible_ssh_pass=vagrant ansible_become=true
+  web2.al.local ansible_host=192.168.1.102 ansible_user=vagrant ansible_ssh_pass=vagrant ansible_become=true
+
+[ansible]
+  localhost ansible_connection=local
+
+[loadbalancer]
+  lb.al.local ansible_host=192.168.1.200 ansible_user=vagrant ansible_ssh_pass=vagrant ansible_become=true

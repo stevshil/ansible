@@ -1,0 +1,11 @@
+VpcID: vpc-c8f306b3
+PubSubA: subnet-d9c484e6
+PubSubB: subnet-c2616d89
+PrivSubA: subnet-f7c686c8
+PrivSubB: subnet-fa676bb1
+IGW: igw-c22c32bb
+SecGroup: sg-88bd36ff
+EIPA: eipalloc-5ffa5469
+EIPB: eipalloc-3aff510c
+NatGatewayA: nat-0c8c7031af2cb93a4
+NatGatewayB: nat-001277644490628ec

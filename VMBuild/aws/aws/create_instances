@@ -1,0 +1,122 @@
+#!/bin/bash
+
+# Script to create instances in AWS for the infrastructure
+# Created by: Steve Shilling
+# Date: 23 Jan 2018
+
+# Start Ansible, Jenkins a sinlge MySQL instance and a Web instance running Apache
+# This will be a cut down version of the environment for the Assessment
+
+if (( $# < 1 ))
+then
+  echo "SYNTAX: $0 <tag name>"
+  exit 1
+fi
+# Get any instances that may be started based on their Tag name
+data=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${1}*" | jq '.Reservations[].Instances[] | select(.State.Name == "running" or .State.Name == "stopped") | .PublicDnsName,.InstanceId,.State.Name' | sed 's/"//g' | grep -v '^$')
+echo "$data"
+
+if [[ -n $data ]]
+then
+  echo "The following are already running:"
+  echo "$data"
+  exit 2
+fi
+
+# Start 6 Instances
+export count=1
+export instanceName=""
+export tagName=$1
+mkdir $tagName
+while (( count < 7 ))
+do
+  case $count in
+    1)  instanceName=Ansible
+        ;;
+    2)  instanceName=Jenkins
+        ;;
+    3)  instanceName=LBApache
+        ;;
+    4)  instanceName=Apache1
+        ;;
+    5)  instanceName=Apache2
+        ;;
+    6)  instanceName=MySQL
+        ;;
+  esac
+  echo "Creating $count: ${tagName}${instanceName}"
+  (
+    instName="${tagName}${instanceName}"
+    mycounter=$count
+    InstanceID=$(aws ec2 run-instances --security-group-ids sg-caa8b0b1 \
+        --key-name academy_jan_2018 --subnet-id subnet-ac9d9ada \
+        --instance-type t2.micro --image-id ami-d834aba1 \
+        --associate-public-ip-address | jq '.Instances[] | .InstanceId' | sed 's/"//g')
+    echo "Your VM is $InstanceID"
+    until aws ec2 describe-instances --instance-ids $InstanceID 2>/dev/null | jq '.Reservations[].Instances[] | .State.Name' 2>/dev/null | grep running >/dev/null 2>&1
+    do
+      sleep 15
+      echo -n "."
+    done
+    aws ec2 create-tags --resources $InstanceID --tags Key=Name,Value=${instName}
+    data=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=${instName}" | jq '.Reservations[].Instances[] | .PublicDnsName,.PrivateDnsName,.InstanceId,.Tags[].Value' | sed 's/"//g' | grep -v '^$')
+    echo ""
+    echo "System started as $(echo "$data" | sed 's/\"//g')"
+    case $mycounter in
+      1)  echo "$data" | grep 'ec2-.*\.compute\.amazonaws\.com' >$tagName/$instName
+          ;;
+      2)  echo "$data" | grep 'ec2-.*\.compute\.amazonaws\.com' >$tagName/$instName
+          ;;
+      3)  echo "$data" | grep 'ec2-.*\.compute\.amazonaws\.com' >$tagName/$instName
+          ;;
+      4)  echo "$data" | grep '^ip-' >$tagName/$instName
+          ;;
+      5)  echo "$data" | grep '^ip-' >$tagName/$instName
+          ;;
+      6)  echo "$data" | grep '^ip-' >$tagName/$instName
+          ;;
+    esac
+  ) &
+  (( count = count + 1 ))
+  sleep 2
+done
+
+# wait for files to exist
+until [[ -e $tagName/${tagName}Ansible ]] && [[ -e $tagName/${tagName}Jenkins ]] && [[ -e $tagName/${tagName}LBApache ]] && [[ -e $tagName/${tagName}Apache1 ]] && [[ -e $tagName/${tagName}Apache2 ]] && [[ -e $tagName/${tagName}MySQL ]]
+do
+  sleep 5
+  echo -n "."
+done
+
+ANSIBLE=$(cat $tagName/${tagName}Ansible)
+JENKINS=$(cat $tagName/${tagName}Jenkins)
+LB=$(cat $tagName/${tagName}LBApache)
+APACHE1=$(cat $tagName/${tagName}Apache1)
+APACHE2=$(cat $tagName/${tagName}Apache2)
+MYSQL=$(cat $tagName/${tagName}MySQL)
+
+rm -rf $tagName
+
+# Write the inventory file
+cat >../ansible/inventory <<_END_
+[webservers]
+$APACHE1
+$APACHE2
+
+[loadbalancers]
+$LB
+
+[ansible]
+$ANSIBLE
+
+[jenkins]
+$JENKINS
+
+[databases]
+$MYSQL
+
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=ec2-user
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+_END_

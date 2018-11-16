@@ -1,0 +1,24 @@
+- name: Create new document directory
+  file:
+    path: "{{ droot }}"
+    recurse: yes
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+- name: Get IP address
+  shell: ifconfig | sed -n '/eth0/,/RX/p' | grep 'inet addr' | awk '{print $2}' | awk -F':' '{print $2}'
+  register: privipdata
+- name: Get OS Name
+  shell: grep PRETTY_NAME /etc/os-release  | awk -F= '{print $2}' | sed 's/"//g'
+  register: osdata
+- name: Add status page
+  template:
+    src: templates/status.html.j2
+    dest: "{{ droot }}/status.html"
+    owner: root
+    group: root
+    mode: 0644
+  vars:
+    privip: "{{ privipdata.stdout }}"
+    os: "{{ osdata.stdout }}"

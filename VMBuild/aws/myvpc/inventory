@@ -1,0 +1,9 @@
+[loadbalancers]
+
+[jenkins]
+ec2-54-166-166-93.compute-1.amazonaws.com
+
+[databases]
+
+[local]
+127.0.0.1
