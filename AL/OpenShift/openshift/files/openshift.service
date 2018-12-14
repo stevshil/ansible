@@ -1,0 +1,6 @@
+[Unit]
+Description=OpenShift Origin Server
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/start_openshift.sh
