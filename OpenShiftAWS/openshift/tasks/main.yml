@@ -46,13 +46,28 @@
   group: root
   mode: 0755
 
-- name: Start the cluster
-  shell: oc cluster up --public-hostname="{{ public_ip }}" --routing-suffix='{{ public_ip }}'
+- name: Set firewall
+  copy:
+    src: "{{ playbook_dir }}/files/iptables"
+    dest: /etc/sysconfig/iptables
+    owner: root
+    group: root
+    mode: '0600'
+    force: yes
+  notify:
+    - restart iptables
 
-- name: Allow port 8443
-  iptables:
-    chain: INPUT
-    protocol: tcp
-    match: tcp
-    destination_port: 8443
-    jump: ACCEPT
+  - name: Install openshift control script
+    copy:
+      src: "{{ playbook_dir }}/files/initd_openshift"
+      dest: /etc/init.d/openshift
+      owner: root
+      group: root
+      mode: '0755'
+      force: 'yes'
+
+  - name: Enable and start openshift
+    service:
+      name: openshift
+      state: started
+      enabled: yes
