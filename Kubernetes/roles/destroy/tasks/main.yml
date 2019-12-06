@@ -1,0 +1,14 @@
+- name: Remove Jenkins server
+  ec2:
+    state: absent
+    instance_ids: "{{ hostvars[groups['kube'][0]].instance_id }}"
+    region: "{{ region }}"
+
+- name: Remove Jenkins from inventory
+  lineinfile:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    regexp: "^{{ groups['kube'][0] }}"
+    state: absent
+
+- debug:
+    msg: "Removing {{ groups['kube'][0] }} from inventory"

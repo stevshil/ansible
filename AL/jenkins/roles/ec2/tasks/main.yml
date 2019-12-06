@@ -8,12 +8,12 @@
 - name: Create ec2 instance
   ec2:
     key_name: "{{ sshkey }}"
-    group: "{{ ec2SG }}"
+    group: "{{ ec2SG[region] }}"
     instance_type: t2.micro
-    image: ami-017b0e29fac27906b
+    image: "{{ ami[region] }}"
     wait: true
     region: "{{ region }}"
-    vpc_subnet_id: "{{ ec2subnet }}"
+    vpc_subnet_id: "{{ ec2subnet[region] }}"
     assign_public_ip: yes
     instance_tags:
       Name: "{{ tagName }}"

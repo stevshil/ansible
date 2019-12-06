@@ -1,0 +1,50 @@
+- name: Install Docker
+  package:
+    name: docker
+    state: present
+
+- name: Enable and start Docker
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Disable swap
+  command: swapoff -a
+
+- name: Check swap off
+  command: grep '^#.*swap' /etc/fstab
+  register: swapnotoff
+  ignore_errors: yes
+
+- name: Check if minikube program exists
+  command: ls /usr/local/bin/minikube
+  register: minikube_installed
+  ignore_errors: yes
+
+- name: Permanently dsiable swapp
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+  when: swapnotoff.rc > 0
+
+- name: Set bridge-nf-call-iptables
+  sysctl:
+    name: bridge-nf-call-iptables
+    value: 1
+    state: present
+    sysctl_set: yes
+    reload: yes
+
+- name: Get minikube software
+  get_url:
+    url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+    dest: /usr/local/bin/minikube
+    mode: 0755
+    owner: root
+    group: root
+  when: minikube_installed.rc > 0
+
+- name: Launch minikube
+  command: /usr/local/bin/minikube --vm-driver=none start
