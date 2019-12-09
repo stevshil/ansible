@@ -1,25 +1,15 @@
-- name: Jenkins facts
-  ec2_instance_facts:
-    filters:
-      "tag:Name": "{{ tagName }}"
-    region: "{{ region }}"
-  register: ec2instance
-
-- debug:
-    msg: "Destroying: {{ ec2instance.instances[0].instance_id }}"
-
 - name: Remove Jenkins server
   ec2:
     state: absent
-    instance_ids: "{{ ec2instance.instances[0].instance_id }}"
+    instance_ids: "{{ hostvars[groups['jenkins'][0]].instance_id }}"
     region: "{{ region }}"
 
 - debug:
     msg: "Removing {{ groups['jenkins'][0] }} from inventory"
 
 # This is done automatically
-# - name: remove Jenkins server from inventory
-#   lineinfile:
-#      dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
-#      state: absent
-#      regexp: "{{ groups['jenkins'][0] }}"
+- name: remove Jenkins server from inventory
+  lineinfile:
+     dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+     state: absent
+     regexp: "{{ groups['jenkins'][0] }}"

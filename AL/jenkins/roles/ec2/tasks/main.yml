@@ -33,7 +33,7 @@
   lineinfile:
     dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
     insertafter: '^\[jenkins\]'
-    line: "{{ item.public_dns_name }}"
+    line: "{{ item.public_dns_name }} instance_id={{ item.id}}"
   when: groups['jenkins'] | length == 0
   with_items: "{{ ec2instance.instances }}"
 

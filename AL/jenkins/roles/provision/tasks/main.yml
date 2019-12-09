@@ -1,15 +1,11 @@
 - name: Install Jenkins dependencies
   yum:
-    name: "{{ item }}"
+    name: ["java-1.8.0-openjdk", "java-1.8.0-openjdk-devel", "git"]
     state: present
-  with_items:
-    - java-1.8.0-openjdk
-    - java-1.8.0-openjdk-devel
-    - git
 
 - name: Install Maven
   unarchive:
-    src: http://mirror.vorboss.net/apache/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+    src: "{{ mavenurl }}"
     dest: /opt
     remote_src: yes
 
@@ -41,7 +37,7 @@
 - name: Wait for Jenkins to start
   wait_for:
     path: /var/log/jenkins/jenkins.log
-    search_regex: "INFO: Started @"
+    search_regex: "Jenkins is fully up and running"
 
 - name: Stop Jenkins to create admin user
   service:
@@ -55,6 +51,33 @@
 - set_fact:
     jpass: adminpass.output
 
+- name: Set log file to blank
+  copy:
+    content: ""
+    dest: /var/log/jenkins/jenkins.log
+    force: yes
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+
+# - name: Remove temp admin account
+#   command: rm -rf /var/lib/jenkins/users/admin_*
+#   ignore_errors: true
+- name: Remove temp admin account
+  file:
+    path: /var/lib/jenkins/users
+    state: absent
+    force: yes
+  ignore_errors: true
+
+- name: Make new directory
+  file:
+    path: /var/lib/jenkins/users
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  ignore_errors: true
+
 - name: Create admin user directory
   file:
     path: /var/lib/jenkins/users/admin
@@ -64,11 +87,10 @@
     group: jenkins
     recurse: yes
 
-- name: Set log file to blank
+- name: Change the Jenkins user
   copy:
-    content: ""
-    dest: /var/log/jenkins/jenkins.log
-    force: yes
+    src: files/users.xml
+    dest: /var/lib/jenkins/users/users.xml
     owner: jenkins
     group: jenkins
     mode: 0644
@@ -81,6 +103,14 @@
     group: jenkins
     mode: 0644
 
+- name: Set Jenkins config to not initial
+  copy:
+    src: files/config.xml
+    dest: /var/lib/jenkins/config.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+
 - name: Initial Jenkins start
   service:
     name: jenkins
@@ -89,24 +119,30 @@
 - name: Wait for Jenkins to restart
   wait_for:
     path: /var/log/jenkins/jenkins.log
-    search_regex: "INFO: Started @"
+    search_regex: "Jenkins is fully up and running"
 
 - name: Wait for Jenkins URL
   uri:
     url: "http://{{ groups['jenkins'][0] }}:8080"
-    status_code: 200
+    status_code: 403
     timeout: 5
+    user: admin
+    password: "{{ adminpw }}"
   register: jenkinsURL
   retries: 60
   delay: 5
   until: >
-    'status' in jenkinsURL and jenkinsURL['status'] == 200
+    'status' in jenkinsURL and jenkinsURL['status'] == 403
+
+- name: Debug URL
+  debug:
+    msg: "{{ jenkinsURL }}"
 
 - name: Install Jeknins Plugins
   jenkins_plugin:
     name: "{{ item }}"
     url_username: admin
-    url_password: secret
+    url_password: "{{ adminpw }}"
   with_items:
     - build-timeout
     - credentials-bindings
