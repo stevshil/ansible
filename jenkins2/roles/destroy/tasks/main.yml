@@ -1,3 +1,11 @@
+- name: Get Instance ID
+  set_fact:
+    instance_id: "{{ hostvars[groups['jenkins'][0]].instance_id }}"
+
+- name: Instance ID
+  debug:
+    msg: "{{ instance_id }}"
+    
 - name: Remove Jenkins server
   ec2:
     state: absent

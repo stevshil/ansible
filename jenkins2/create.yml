@@ -8,4 +8,5 @@
   become: True
   gather_facts: True
   roles:
+    - maven
     - ansible-role-jenkins

@@ -7,6 +7,7 @@ java_packages:
   - java-1.8.0-openjdk
   - java-1.8.0-openjdk-devel
 mavenurl: http://apache.mirrors.nublue.co.uk/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+mavendir: /opt/apache-maven-3.6.3
 jenkins_package_state: present
 jenkins_admin_username: admin
 jenkins_admin_password: secret
