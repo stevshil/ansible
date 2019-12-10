@@ -1,4 +1,4 @@
-- name: Remove Jenkins server
+- name: Remove Kubernetes server
   ec2:
     state: absent
     instance_ids: "{{ hostvars[groups['kube'][0]].instance_id }}"

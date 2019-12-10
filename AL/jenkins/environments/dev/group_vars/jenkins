@@ -1,6 +1,0 @@
-ansible_connection: ssh
-ansible_become_user: root
-ansible_become: yes
-ansible_become_method: sudo
-adminpw: secret
-mavenurl: http://apache.mirrors.nublue.co.uk/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz

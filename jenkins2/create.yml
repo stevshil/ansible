@@ -9,4 +9,5 @@
   gather_facts: True
   roles:
     - maven
+    - installpkgs
     - ansible-role-jenkins

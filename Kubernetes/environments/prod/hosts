@@ -5,4 +5,4 @@ local1 ansible_host=127.0.0.1 ansible_connection=local
 local2 ansible_host=127.0.0.1 ansible_connection=local
 
 [kube]
-ec2-34-243-165-12.eu-west-1.compute.amazonaws.com instance_id=i-06cacdc2493b0cc03
+52.17.2.158 instance_id=i-0a0a517881e59e17f

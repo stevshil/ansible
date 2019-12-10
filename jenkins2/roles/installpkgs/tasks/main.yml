@@ -1,0 +1,4 @@
+- name: Install extra software
+  package:
+    name:
+      - git
