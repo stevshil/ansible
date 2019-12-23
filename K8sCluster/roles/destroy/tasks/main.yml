@@ -1,0 +1,130 @@
+# - name: Debug
+#   debug:
+#     msg:
+#       #- "{{ groups['kubeworker'][item] }}"
+#       - "{{item}}"
+#   #with_sequence: start=0 end={{ numworkers-1 }}
+#   with_items: "{{groups['kubeworker']}}"
+
+- name: Remove Workers
+  ec2:
+    state: absent
+    instance_ids: "{{hostvars[item].instance_id}}"
+    region: "{{ region }}"
+  with_items: "{{ groups['kubeworker'] }}"
+  when: groups['kubeworker'] | length > 0
+
+- name: Remove Workers from inventory
+  lineinfile:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    regexp: "^{{item}}"
+    state: absent
+  with_items: "{{ groups['kubeworker'] }}"
+  when: groups['kubeworker'] | length > 0
+
+- name: Remove Master
+  ec2:
+    state: absent
+    instance_ids: "{{hostvars[item].instance_id}}"
+    region: "{{ region }}"
+  with_items: "{{ groups['kubemaster'] }}"
+  when: groups['kubemaster'] | length > 0
+
+- name: Remove Master from inventory
+  lineinfile:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    regexp: "^{{ groups['kubemaster'][0] }}"
+    state: absent
+  when: groups['kubemaster'] | length > 0
+
+- name: Remove Master
+  ec2:
+    state: absent
+    instance_ids: "{{hostvars[item].instance_id}}"
+    region: "{{ region }}"
+  with_items: "{{ groups['controller'] }}"
+  when: groups['controller'] | length > 0
+
+- name: Remove Controller from inventory
+  lineinfile:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    regexp: "^{{ groups['controller'][0] }}"
+    state: absent
+  when: groups['controller'] | length > 0
+
+- name: Remove ec2Controller from inventory
+  lineinfile:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    regexp: "^{{ groups['ec2controller'][0] }}"
+    state: absent
+  when: groups['ec2controller'] | length > 0
+
+- name: Delete the remote inventory file kube.ini
+  file:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/kube.ini"
+    state: absent
+
+# Check if name exists
+- name: Check wildcard record
+  route53_info:
+    type: A
+    query: record_sets
+    hosted_zone_id: "{{ dnszoneid }}"
+    start_record_name: "*.kube.{{dnszone}}"
+  register: wildcard
+
+- name: Remove wildcard DNS
+  route53:
+    state: absent
+    zone: "{{ dnszone }}"
+    record: "*.kube.{{ dnszone }}"
+    type: PTR
+    ttl: 60
+    value:
+      - kube.grads.al-labs.co.uk
+  when: wildcard is succeeded
+
+- name: Check master record
+  route53_info:
+    type: A
+    query: record_sets
+    hosted_zone_id: "{{ dnszoneid }}"
+    start_record_name: "kube.{{dnszone}}"
+  register: masterdns
+
+# - name: Debug dns
+#   debug:
+#     msg: "masterdns {{ masterdns }}"
+
+- name: Remove Master DNS entries
+  route53:
+    state: absent
+    zone: "{{ dnszone }}"
+    record: "kube.{{ dnszone }}"
+    type: A
+    ttl: 60
+    value:
+      - "{{ groups['kubemaster'][0] }}"
+  when: masterdns is defined
+
+- name: Check master record
+  route53_info:
+    type: A
+    query: record_sets
+    hosted_zone_id: "{{ dnszoneid }}"
+    start_record_name: "kubecontrol.{{dnszone}}"
+  register: controllerdns
+
+- name: Remove Controller DNS entries
+  route53:
+    state: absent
+    zone: "{{ dnszone }}"
+    record: kubecontrol."{{ dnszone }}"
+    type: A
+    ttl: 60
+    value:
+      - "{{ groups['controller'][0] }}"
+  when: controllerdns is succeeded
+
+- debug:
+    msg: "Check the inventory file environments/{{ec2env}}/hosts to make sure hosts are removed"
