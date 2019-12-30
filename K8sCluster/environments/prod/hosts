@@ -5,9 +5,14 @@ local1 ansible_host=127.0.0.1 ansible_connection=local
 local2 ansible_host=127.0.0.1 ansible_connection=local
 
 [controller]
+52.12.111.143 instance_id=i-000e43319f55cbfbf private_ip=172.31.34.81 kubename=controller
 
 [kubemaster]
+52.25.173.7 instance_id=i-01307322827292dee private_ip=172.31.39.164 kubename=master
 
 [kubeworker]
+18.237.4.225 instance_id=i-0cf8cf2e054642706 private_ip=172.31.35.246 kubename=worker1
+34.210.139.18 instance_id=i-0bda7b32efe8ea61c private_ip=172.31.43.22 kubename=worker1
 
 [ec2controller]
+52.12.111.143 instance_id=i-000e43319f55cbfbf private_ip=172.31.34.81 kubename=controller

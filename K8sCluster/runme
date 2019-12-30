@@ -24,9 +24,9 @@ then
 	else
 		ansible-playbook -i environments/prod --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" create.yml
 	fi
-else
-	if (( $? == 0 ))
-	then
+fi
+
+if (( $? == 0 ))
+then
 		ssh -i $sshKeyFile ec2-user@$(grep -A1 '^\[controller' environments/prod/hosts  | tail -1 | awk '{print $1}') "cd kubespray; ansible-playbook -i inventory/mycluster/inventory.ini --become --become-user=root cluster.yml"
-	fi
 fi
