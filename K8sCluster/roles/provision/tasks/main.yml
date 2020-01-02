@@ -42,3 +42,11 @@
   pip:
     executable: pip
     name: ansible
+
+- name: Install kubectl
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{kubectlver}}/bin/linux/amd64/kubectl"
+    dest: /bin/kubectl
+    mode: 755
+    owner: root
+    group: root

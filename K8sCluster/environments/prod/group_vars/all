@@ -1,5 +1,6 @@
 nummasters: 1
 numworkers: 2
+kubectlver: v1.17.0
 bastion: yes
 vpc_id:
   eu-west-1: vpc-3fa18d5a
