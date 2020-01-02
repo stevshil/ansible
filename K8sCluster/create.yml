@@ -13,7 +13,7 @@
     - provision
 
 # Install K8s
-- hosts: ec2controller
+- hosts: bastion
   become: no
   roles:
     - install

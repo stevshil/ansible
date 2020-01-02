@@ -52,12 +52,12 @@
     state: absent
   when: groups['controller'] | length > 0
 
-- name: Remove ec2Controller from inventory
+- name: Remove Basion from inventory
   lineinfile:
     path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
-    regexp: "^{{ groups['ec2controller'][0] }}"
+    regexp: "^{{ groups['bastion'][0] }}"
     state: absent
-  when: groups['ec2controller'] | length > 0
+  when: groups['bastion'] | length > 0
 
 - name: Delete the remote inventory file kube.ini
   file:
