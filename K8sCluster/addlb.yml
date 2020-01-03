@@ -1,0 +1,6 @@
+# Create the Nodes
+- hosts: kubemaster
+  become: no
+  gather_facts: True
+  roles:
+    - dnslb

@@ -11,6 +11,8 @@ vpc_security_groups:
 ec2subnet:
   eu-west-1: subnet-0208595b
   us-west-2: subnet-582cb82f
+lbsubnets:
+  us-west-2: subnet-90f98ff5
 ec2SG:
   eu-west-1: AL-Shared
   us-west-2: default
