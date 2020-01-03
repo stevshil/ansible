@@ -69,7 +69,7 @@
   with_items:
     - ""
     - "[ELB]"
-    - "{{ lbdetail.dns_name }}"
+    - "{{ lbdetail.dns_name }} lbport={{ lbhttp.stdout }}"
   when: "'ELB' not in groups"
 
 - name: Refresh LB inventory
@@ -83,7 +83,7 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "*.app.kube.{{ dnszone }}"
+    record: "*.app.{{dnsprefix}}.{{ dnszone }}"
     type: CNAME
     ttl: 60
     value:

@@ -190,7 +190,7 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "kubecontrol.{{ dnszone }}"
+    record: "kubecontrol.{{dnsprefix}}.{{ dnszone }}"
     type: A
     ttl: 60
     value:
@@ -201,23 +201,11 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "kube.{{ dnszone }}"
+    record: "kube.{{dnsprefix}}.{{ dnszone }}"
     type: A
     ttl: 60
     value:
       - "{{ groups['kubemaster'][0] }}"
-    overwrite: yes
-
-# Wildcard for master server to enable inbound DNS for services
-- name: Add wildcard DNS
-  route53:
-    state: present
-    zone: "{{ dnszone }}"
-    record: "*.kube.{{ dnszone }}"
-    type: CNAME
-    ttl: 60
-    value:
-      - "kube.{{ dnszone }}"
     overwrite: yes
 
 - name: Set Master Public IP

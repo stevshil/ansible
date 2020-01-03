@@ -65,31 +65,12 @@
     state: absent
 
 # Check if name exists
-- name: Check wildcard record
-  route53_info:
-    type: A
-    query: record_sets
-    hosted_zone_id: "{{ dnszoneid }}"
-    start_record_name: "*.kube.{{dnszone}}"
-  register: wildcard
-
-- name: Remove wildcard DNS
-  route53:
-    state: absent
-    zone: "{{ dnszone }}"
-    record: "*.kube.{{ dnszone }}"
-    type: CNAME
-    ttl: 60
-    value:
-      - kube.grads.al-labs.co.uk
-  when: wildcard is succeeded
-
 - name: Check master record
   route53_info:
     type: A
     query: record_sets
     hosted_zone_id: "{{ dnszoneid }}"
-    start_record_name: "kube.{{dnszone}}"
+    start_record_name: "kube.{{dnsprefix}}.{{dnszone}}"
   register: masterdns
 
 # - name: Debug dns
@@ -100,7 +81,7 @@
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "kube.{{ dnszone }}"
+    record: "kube.{{dnsprefix}}.{{ dnszone }}"
     type: A
     ttl: 60
     value:
@@ -112,14 +93,14 @@
     type: A
     query: record_sets
     hosted_zone_id: "{{ dnszoneid }}"
-    start_record_name: "kubecontrol.{{dnszone}}"
+    start_record_name: "kubecontrol.{{dnsprefix}}.{{dnszone}}"
   register: controllerdns
 
 - name: Remove Controller DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: kubecontrol."{{ dnszone }}"
+    record: "kubecontrol.{{dnsprefix}}.{{ dnszone }}"
     type: A
     ttl: 60
     value:
