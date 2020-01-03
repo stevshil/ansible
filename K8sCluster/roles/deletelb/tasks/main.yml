@@ -1,6 +1,8 @@
 - name: Destroy LB
   elb_application_lb:
     name: "steve-k8s-{{ ec2env }}-lb"
+    region: "{{ region }}"
+    wait: yes
     state: absent
 
 - name: Destroy Target Group
@@ -10,6 +12,7 @@
     vpc_id: "{{ vpc_id[region] }}"
     port: "{{hostvars[item].lbport}}"
     state: absent
+    region: "{{ region }}"
   with_items: "{{ groups['ELB'] }}"
 
 - name: Check master record
@@ -37,11 +40,14 @@
     regexp: "^{{item}}"
     state: absent
   with_items: "{{ groups['ELB'] }}"
-  when: "'ELB' not in groups"
+  when: "'ELB' in groups"
 
 - name: Remove ELB Group from inventory
   lineinfile:
     path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
     regexp: "^[ELB]"
     state: absent
-  when: "'ELB' not in groups"
+  ignore_errors: true
+
+- name: Refresh ELB inventory
+  meta: refresh_inventory
