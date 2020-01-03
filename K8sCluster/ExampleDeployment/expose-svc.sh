@@ -6,6 +6,9 @@ kubectl expose deployment/nginx --type="NodePort" --port 80 -n steve
 # Create outside world
 kubectl expose deployment/nginx --type="NodePort" --port 80 -n steve --name nginxext
 
+kubectl expose deployment/nginx --type="LoadBalancer" --port 80 -n steve --name nginx-lb
+# Also see https://www.haproxy.com/blog/dissecting-the-haproxy-kubernetes-ingress-controller/ to enable DNS naming, still requires an LB in front
+
 # Create DNS path to PORT
 PORT=$(kubectl get svc -n steve | grep nginxext | awk '{print $5}' | sed -e 's/^.*://' -e 's,/.*$,,')
 

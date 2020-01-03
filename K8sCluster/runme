@@ -28,5 +28,8 @@ fi
 
 if (( $? == 0 ))
 then
-		ssh -i $sshKeyFile ec2-user@$(grep -A1 '^\[controller' environments/prod/hosts  | tail -1 | awk '{print $1}') "cd kubespray; ansible-playbook -i inventory/mycluster/inventory.ini --become --become-user=root cluster.yml"
+		# Install Kubernetes on to the cluster and use the Public IP of the Master for access ip
+		ssh -i $sshKeyFile ec2-user@$(grep -A1 '^\[controller' environments/prod/hosts  | tail -1 | awk '{print $1}') "cd kubespray; ansible-playbook -i inventory/mycluster/inventory.ini --extra-vars \"access_ip=$(grep -A1 '^\[kubemaster' environments/prod/hosts | tail -1 | awk '{print $1}')\" --become --become-user=root cluster.yml"
+		# For insecure registry;
+		# --extra-vars "docker_options=--insecure-registry=xxx.yyy:5000"
 fi
