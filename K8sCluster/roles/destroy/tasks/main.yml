@@ -78,7 +78,7 @@
     state: absent
     zone: "{{ dnszone }}"
     record: "*.kube.{{ dnszone }}"
-    type: PTR
+    type: CNAME
     ttl: 60
     value:
       - kube.grads.al-labs.co.uk

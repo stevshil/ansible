@@ -214,7 +214,7 @@
     state: present
     zone: "{{ dnszone }}"
     record: "*.kube.{{ dnszone }}"
-    type: PTR
+    type: CNAME
     ttl: 60
     value:
       - "kube.{{ dnszone }}"
