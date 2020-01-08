@@ -22,10 +22,7 @@
       tagname:
         Name: "{{prefix}}VMelastic"
   register: vms
-
-- name: Debug
-  debug:
-    msg: "{{ vms }}"
+  when: groups['VMS'] | length == 0
 
 - name: Wait for SSH on all VMs
   delegate_to: "{{ vms.results[item].instances[0].public_dns_name }}"
@@ -37,6 +34,7 @@
     - 0
     - 1
     - 2
+  when: groups['VMS'] | length == 0
 
 - name: Update hosts inventory
   lineinfile:
