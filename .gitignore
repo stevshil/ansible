@@ -2,3 +2,7 @@
 secrets/*
 **/*.retry
 **/kube.ini
+Azure/vm/bin
+Azure/vm/include
+Azure/vm/lib
+Azure/vm/lib64

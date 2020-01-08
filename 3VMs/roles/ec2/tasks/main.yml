@@ -1,0 +1,52 @@
+- name: Create 3 VMs
+  ec2:
+    key_name: "{{ keypair }}"
+    instance_type: "{{ item.type }}"
+    image: "{{ ami[region] }}"
+    assign_public_ip: yes
+    wait: yes
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ subnet[region] }}"
+    instance_tags: "{{ mytags | combine(item.tagname) }}"
+  with_items:
+    - Name: "{{ prefix }}VMlogstash"
+      type: t2.micro
+      tagname:
+        Name: "{{ prefix }}VMlogstash"
+    - Name: "{{ prefix }}VMkibana"
+      type: t3a.medium
+      tagname:
+        Name: "{{prefix}}VMkibana"
+    - Name: "{{prefix}}VMelastic"
+      type: t3a.medium
+      tagname:
+        Name: "{{prefix}}VMelastic"
+  register: vms
+
+- name: Debug
+  debug:
+    msg: "{{ vms }}"
+
+- name: Wait for SSH on all VMs
+  delegate_to: "{{ vms.results[item].instances[0].public_dns_name }}"
+  wait_for_connection:
+    delay: 30
+    timeout: 300
+  with_items:
+    - 0
+    - 1
+    - 2
+
+- name: Update hosts inventory
+  lineinfile:
+    dest: "{{ playbook_dir }}/environment/hosts"
+    insertafter: '^\[VMS\]'
+    line: "{{ vms.results[item].instances[0].public_ip }} instance_id={{ vms.results[item].instances[0].id }} systemname={{vms.results[item].instances[0].tags.Name}}"
+  when: groups['VMS'] | length == 0
+  with_items:
+    - 0
+    - 1
+    - 2
+
+- name: Update hosts file
+  meta: refresh_inventory

@@ -1,0 +1,7 @@
+[localhost]
+local ansible_host=127.0.0.1 ansible_connection=local
+
+[VMS]
+34.244.250.206 instance_id=i-0d1b098aff7b628b1 systemname=steveVMelastic
+34.241.48.0 instance_id=i-0dd4ca7f0c4bf3c9a systemname=steveVMkibana
+34.253.183.223 instance_id=i-07a3b74c094e6d87e systemname=steveVMlogstash
