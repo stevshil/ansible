@@ -1,0 +1,21 @@
+- name: Remove Instances
+  ec2:
+    state: absent
+    instance_ids: "{{hostvars[item].instance_id}}"
+    region: "{{ region }}"
+  with_items: "{{ groups['VMS'] }}"
+  when: groups['VMS'] | length > 0
+
+- name: Remove Workers from inventory
+  lineinfile:
+    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    regexp: "^{{item}}"
+    state: absent
+  with_items: "{{ groups['VMS'] }}"
+  when: groups['VMS'] | length > 0
+
+- name: Update hosts file
+  meta: refresh_inventory
+
+- debug:
+    msg: "Check the inventory file environments/hosts to make sure hosts are removed"

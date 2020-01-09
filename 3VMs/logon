@@ -1,0 +1,7 @@
+#!/bin/bash
+
+data=$(sed -n '/VMS/,$p' environment/hosts | sed '/^.*VMS/d' )
+
+echo "$data"
+
+

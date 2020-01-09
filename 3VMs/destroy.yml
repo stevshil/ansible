@@ -1,0 +1,6 @@
+# Create the Nodes
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - destroy
