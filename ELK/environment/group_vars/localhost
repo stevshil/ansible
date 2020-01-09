@@ -1,1 +1,4 @@
 ansible_python_interpreter: /usr/bin/python3
+
+# For mac uncomment below and comment abov
+# ansible_python_interpreter: /usr/local/bin/python3

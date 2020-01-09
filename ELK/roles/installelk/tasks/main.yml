@@ -66,17 +66,17 @@
 - name: Add logstash start stop service
   copy:
     src: files/logstash-systemd
-    dest: /usr/lib/systemd
+    dest: /usr/lib/systemd/system/logstash.service
     mode: '0644'
     owner: root
     group: root
   when: hostvars[inventory_hostname].systemname == "{{prefix}}VMlogstash"
 
-- name: Start service Logstash
-  service:
+- name: Reload systemd
+  systemd:
     name: logstash
     state: restarted
-    enabled: yes
+    daemon_reload: yes
   when: hostvars[inventory_hostname].systemname == "{{prefix}}VMlogstash"
 
 - name: Start Kibana
