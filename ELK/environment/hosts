@@ -2,6 +2,3 @@
 local ansible_host=127.0.0.1 ansible_connection=local
 
 [VMS]
-18.203.157.93 instance_id=i-074888fee38f1f06f private_ip=10.0.3.38 systemname=steveVMelastic
-34.245.155.113 instance_id=i-083d7f75d7d488ae0 private_ip=10.0.3.184 systemname=steveVMkibana
-34.249.130.77 instance_id=i-0f969916d3b6d9eed private_ip=10.0.3.127 systemname=steveVMlogstash
