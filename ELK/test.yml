@@ -1,0 +1,11 @@
+- name: test me
+  connection: local
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Show data
+      debug:
+        msg: "{{hostvars[item].systemname}}"
+      when: hostvars[item].systemname == "steveVMelastic"
+      with_items:
+        "{{groups['VMS']}}"

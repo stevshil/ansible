@@ -1,0 +1,14 @@
+[Unit]
+Description=logstash
+DefaultDependencies=no
+Requires= network.target
+After= network-online.target local-fs.target
+
+[Service]
+Type=simple
+RemainAfterExit=yes
+ExecStart=/usr/share/logstash/bin/logstash -f /etc/logstash/conf.d
+ExecStop=pkill logstash
+
+[Install]
+WantedBy=multi-user.target

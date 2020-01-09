@@ -2,6 +2,12 @@
   debug:
     msg: "HOSTVAR: {{hostvars[inventory_hostname].systemname}}"
 
+- name: Install Java for Logstash
+  package:
+    name: java-1.8.0-openjdk
+    state: present
+  when: hostvars[inventory_hostname].systemname == "{{prefix}}VMlogstash"
+
 - name: Install Logstash
   package:
     name: https://artifacts.elastic.co/downloads/logstash/logstash-7.5.1.rpm
@@ -23,28 +29,66 @@
 - name: Configure Elasticsearch
   template:
     src: templates/elasticsearch.yml.j2
-    dest: /etc/elasticsearch.yml
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: elasticsearch
+    mode: 0640
+  when: hostvars[inventory_hostname].systemname == "{{prefix}}VMelastic"
+
+- name: Set Elasticsearch private IP
+  set_fact:
+    elasticprivip: "{{hostvars[item].private_ip}}"
+  when: hostvars[item].systemname == "steveVMelastic"
+  with_items:
+    "{{groups['VMS']}}"
+
+- name: Configure Kibana
+  template:
+    src: templates/kibana.yml.j2
+    dest: /etc/kibana/kibana.yml
     owner: root
     group: root
     mode: 0640
+  when: hostvars[inventory_hostname].systemname == "{{prefix}}VMkibana"
+
+- name: Configure logstash basic
+  copy:
+    src: "files/{{item}}"
+    dest: "/etc/logstash/conf.d/{{item}}"
+    mode: '0644'
+    owner: root
+    group: root
+  with_items:
+    - input.conf
+    - output.conf
+  when: hostvars[inventory_hostname].systemname == "{{prefix}}VMlogstash"
+
+- name: Add logstash start stop service
+  copy:
+    src: files/logstash-systemd
+    dest: /usr/lib/systemd
+    mode: '0644'
+    owner: root
+    group: root
+  when: hostvars[inventory_hostname].systemname == "{{prefix}}VMlogstash"
 
 - name: Start service Logstash
   service:
     name: logstash
-    state: started
+    state: restarted
     enabled: yes
   when: hostvars[inventory_hostname].systemname == "{{prefix}}VMlogstash"
 
 - name: Start Kibana
   service:
     name: kibana
-    state: started
+    state: restarted
     enabled: yes
   when: hostvars[inventory_hostname].systemname == "{{prefix}}VMkibana"
 
 - name: Start Elasticsearch
   service:
     name: elasticsearch
-    state: started
+    state: restarted
     enabled: yes
   when: hostvars[inventory_hostname].systemname == "{{prefix}}VMelastic"

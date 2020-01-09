@@ -1,0 +1,29 @@
+- name: Install dependent software
+  package:
+    name: ['python2-pip']
+    state: present
+
+- name: Install docker-py
+  pip:
+    name: docker-py
+
+- name: Install Docker
+  package:
+    name: docker
+    state: present
+
+- name: Enable and start docker
+  service:
+    name: docker
+    state: restarted
+    enabled: yes
+
+- name: Launch dockerreg container
+  docker_container:
+    name: dockerreg
+    image: registry:2
+    volumes:
+      - /var/lib/registry:/var/lib/registry
+    restart_policy: always
+    published_ports:
+      - 0.0.0.0:5000:5000

@@ -1,0 +1,5 @@
+[localhost]
+local ansible_host=127.0.0.1 ansible_connection=local
+
+[VMS]
+18.203.81.159 instance_id=i-0ffdab6b4cd819996 private_ip=10.0.3.231 systemname=dockerreg

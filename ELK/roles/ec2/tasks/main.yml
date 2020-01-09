@@ -10,7 +10,7 @@
     instance_tags: "{{ mytags | combine(item.tagname) }}"
   with_items:
     - Name: "{{ prefix }}VMlogstash"
-      type: t2.micro
+      type: t3a.medium
       tagname:
         Name: "{{ prefix }}VMlogstash"
     - Name: "{{ prefix }}VMkibana"
@@ -18,7 +18,7 @@
       tagname:
         Name: "{{prefix}}VMkibana"
     - Name: "{{prefix}}VMelastic"
-      type: t3a.medium
+      type: t2.micro
       tagname:
         Name: "{{prefix}}VMelastic"
   register: vms
