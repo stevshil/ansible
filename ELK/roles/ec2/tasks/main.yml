@@ -40,7 +40,7 @@
   lineinfile:
     dest: "{{ playbook_dir }}/environment/hosts"
     insertafter: '^\[VMS\]'
-    line: "{{ vms.results[item].instances[0].public_ip }} instance_id={{ vms.results[item].instances[0].id }} systemname={{vms.results[item].instances[0].tags.Name}}"
+    line: "{{ vms.results[item].instances[0].public_ip }} instance_id={{ vms.results[item].instances[0].id }} private_ip={{ vms.results[item].instances[0].private_ip }} systemname={{vms.results[item].instances[0].tags.Name}}"
   when: groups['VMS'] | length == 0
   with_items:
     - 0

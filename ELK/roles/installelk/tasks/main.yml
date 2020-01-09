@@ -20,6 +20,14 @@
     state: present
   when: hostvars[inventory_hostname].systemname == "{{prefix}}VMelastic"
 
+- name: Configure Elasticsearch
+  template:
+    src: templates/elasticsearch.yml.j2
+    dest: /etc/elasticsearch.yml
+    owner: root
+    group: root
+    mode: 0640
+
 - name: Start service Logstash
   service:
     name: logstash

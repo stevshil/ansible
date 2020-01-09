@@ -8,14 +8,11 @@
 
 - name: Remove Workers from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ playbook_dir }}/environment/hosts"
     regexp: "^{{item}}"
     state: absent
   with_items: "{{ groups['VMS'] }}"
   when: groups['VMS'] | length > 0
-
-- name: Update hosts file
-  meta: refresh_inventory
 
 - debug:
     msg: "Check the inventory file environments/hosts to make sure hosts are removed"

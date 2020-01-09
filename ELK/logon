@@ -1,0 +1,21 @@
+#!/bin/bash
+
+data=$(sed -n '/VMS/,$p' environment/hosts | sed '/^.*VMS/d' )
+
+grep $(echo "$data" | sed 's/^.*=//' | tail -1) environment/hosts | awk '{print $1}'
+
+select host in $(echo "$data" | sed 's/^.*=//') EXIT
+do
+  case $host in
+    EXIT)
+      break
+      ;;
+    $host)
+      thehost=$(grep $(echo "$data" | sed 's/^.*=//' | grep $host) environment/hosts | awk '{print $1}')
+      ssh -i $1 ec2-user@$thehost
+      ;;
+    *)
+      echo "Unknown option"
+      ;;
+  esac
+done

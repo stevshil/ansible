@@ -1,0 +1,31 @@
+- hosts: localhost
+  vars:
+    ansible_python_interpreter: ~/Documents/projects/ansible/Azure/vm/bin/python
+  connection: local
+  tasks:
+    - name: Create NIC
+      azure_rm_networkinterface:
+        name: stevenic001
+        resource_group: DefaultResourceGroup-EUS
+        virtual_network: vnet001
+        subnet_name: default
+        security_group: jasmin-nsg
+        ip_configurations:
+          - name: ipconfig1
+            public_ip_address_name: steveip001
+            primary: True
+
+    - name: Create VM
+      azure_rm_virtualmachine:
+        resource_group: DefaultResourceGroup-EUS
+        name: liban
+        vm_size: Standard_D2
+        ssh_password_enabled: true
+        network_interfaces: stevenic001
+        admin_username: liban
+        admin_password: liban
+        image:
+          offer: CentOS
+          publisher: OpenLogic
+          sku: '7.1'
+          version: latest
