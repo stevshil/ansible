@@ -9,3 +9,4 @@ tagName: StevesJenkins
 ec2subnet: subnet-b6bfa5ce
 ec2env: prod
 ansible_ssh_common_args: -o StrictHostKeyChecking=no
+jenkins_version: 2.213

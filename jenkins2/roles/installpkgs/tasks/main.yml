@@ -2,3 +2,11 @@
   package:
     name:
       - git
+      - '@Development tools'
+      - python2-pip
+
+- name: Install Python jenkins module
+  pip:
+    name: "{{ item }}"
+  with_items:
+    - python-jenkins

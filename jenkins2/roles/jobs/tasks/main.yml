@@ -1,0 +1,26 @@
+- name: Get Jenkins Crumb
+  uri:
+    url: 'http://127.0.0.1:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
+    user: "{{ jenkins_admin_username }}"
+    password: "{{jenkins_admin_password}}"
+    force_basic_auth: yes
+    return_content: yes
+  register: crumb
+
+- name: Install Maven Petclinc Job
+  jenkins_job:
+    name: PetClinicBuild
+    config: "{{ lookup('file', 'files/jenkins-maven-job-config.xml')}}"
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    url: http://localhost:8080
+    state: present
+
+- name: Shell Example
+  jenkins_job:
+    name: ShellExample
+    config: "{{ lookup('template', 'templates/shell.xml.j2')}}"
+    user: "{{ jenkins_admin_username }}"
+    password: "{{ jenkins_admin_password }}"
+    url: http://localhost:8080
+    state: present
