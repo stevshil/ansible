@@ -1,3 +1,4 @@
+region: eu-west-1
 vpc_id:
   eu-west-1: vpc-3fa18d5a
 vpc_security_groups: sg-07acaaaecee819880

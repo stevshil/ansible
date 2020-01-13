@@ -7,6 +7,5 @@
 
 - name: Install Python jenkins module
   pip:
-    name: "{{ item }}"
-  with_items:
-    - python-jenkins
+    name: ["python-jenkins","jenkins-job-builder","six"]
+    extra_args: --upgrade

@@ -5,7 +5,7 @@
 - name: Instance ID
   debug:
     msg: "{{ instance_id }}"
-    
+
 - name: Remove Jenkins server
   ec2:
     state: absent

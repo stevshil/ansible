@@ -1,26 +1,36 @@
-- name: Get Jenkins Crumb
-  uri:
-    url: 'http://127.0.0.1:8080/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,":",//crumb)'
-    user: "{{ jenkins_admin_username }}"
-    password: "{{jenkins_admin_password}}"
-    force_basic_auth: yes
-    return_content: yes
-  register: crumb
+- name: Create jenkins_jobs directory
+  file:
+    path: /etc/jenkins_jobs
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
 
-- name: Install Maven Petclinc Job
-  jenkins_job:
-    name: PetClinicBuild
-    config: "{{ lookup('file', 'files/jenkins-maven-job-config.xml')}}"
-    user: "{{ jenkins_admin_username }}"
-    password: "{{ jenkins_admin_password }}"
-    url: http://localhost:8080
-    state: present
+- name: Create jobs location for all job yaml configs
+  file:
+    path: /var/lib/jenkins/ymljobs
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
 
-- name: Shell Example
-  jenkins_job:
-    name: ShellExample
-    config: "{{ lookup('template', 'templates/shell.xml.j2')}}"
-    user: "{{ jenkins_admin_username }}"
-    password: "{{ jenkins_admin_password }}"
-    url: http://localhost:8080
-    state: present
+- name: Install Job builder scripting dir
+  template:
+    src: templates/jenkins_jobs.ini.j2
+    dest: /etc/jenkins_jobs/jenkins_jobs.ini
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy job configs to Jenkins
+  copy:
+    src: files/yml/
+    dest: /var/lib/jenkins/ymljobs
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Load Shell Example
+  shell: 'jenkins-jobs update *.yml'
+  args:
+    chdir: /var/lib/jenkins/ymljobs
