@@ -1,0 +1,96 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<maven2-moduleset plugin="maven-plugin@3.4">
+  <actions/>
+  <description>Build PetClinic</description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.0.0">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://bitbucket.org/JangleFett/petclinic.git</url>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/master</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="list"/>
+    <extensions/>
+  </scm>
+  <assignedNode>StevesVM</assignedNode>
+  <canRoam>false</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <rootModule>
+    <groupId>org.springframework.samples</groupId>
+    <artifactId>spring-petclinic</artifactId>
+  </rootModule>
+  <goals>package</goals>
+  <mavenOpts>-Dmaven.test.skip=true</mavenOpts>
+  <aggregatorStyleBuild>true</aggregatorStyleBuild>
+  <incrementalBuild>false</incrementalBuild>
+  <ignoreUpstremChanges>true</ignoreUpstremChanges>
+  <ignoreUnsuccessfulUpstreams>false</ignoreUnsuccessfulUpstreams>
+  <archivingDisabled>false</archivingDisabled>
+  <siteArchivingDisabled>false</siteArchivingDisabled>
+  <fingerprintingDisabled>false</fingerprintingDisabled>
+  <resolveDependencies>false</resolveDependencies>
+  <processPlugins>false</processPlugins>
+  <mavenValidationLevel>-1</mavenValidationLevel>
+  <runHeadless>false</runHeadless>
+  <disableTriggerDownstreamProjects>false</disableTriggerDownstreamProjects>
+  <blockTriggerWhenBuilding>true</blockTriggerWhenBuilding>
+  <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+  <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+  <reporters/>
+  <publishers>
+    <hudson.plugins.s3.S3BucketPublisher plugin="s3@0.11.2">
+      <profileName>uses3</profileName>
+      <entries>
+        <hudson.plugins.s3.Entry>
+          <bucket>alsteve</bucket>
+          <sourceFile>**/target/spring-petclinic-2.0.0.jar</sourceFile>
+          <excludedFile></excludedFile>
+          <storageClass>STANDARD</storageClass>
+          <selectedRegion>us-east-1</selectedRegion>
+          <noUploadOnFailure>true</noUploadOnFailure>
+          <uploadFromSlave>true</uploadFromSlave>
+          <managedArtifacts>false</managedArtifacts>
+          <useServerSideEncryption>false</useServerSideEncryption>
+          <flatten>true</flatten>
+          <gzipFiles>false</gzipFiles>
+          <showDirectlyInBrowser>false</showDirectlyInBrowser>
+          <keepForever>false</keepForever>
+        </hudson.plugins.s3.Entry>
+      </entries>
+      <dontWaitForConcurrentBuildCompletion>false</dontWaitForConcurrentBuildCompletion>
+      <consoleLogLevel>
+        <name>INFO</name>
+        <value>800</value>
+        <resourceBundleName>sun.util.logging.resources.logging</resourceBundleName>
+      </consoleLogLevel>
+      <pluginFailureResultConstraint>
+        <name>FAILURE</name>
+        <ordinal>2</ordinal>
+        <color>RED</color>
+        <completeBuild>true</completeBuild>
+      </pluginFailureResultConstraint>
+      <userMetadata/>
+    </hudson.plugins.s3.S3BucketPublisher>
+  </publishers>
+  <buildWrappers/>
+  <prebuilders/>
+  <postbuilders/>
+  <runPostStepsIfResult>
+    <name>SUCCESS</name>
+    <ordinal>0</ordinal>
+    <color>BLUE</color>
+    <completeBuild>true</completeBuild>
+  </runPostStepsIfResult>
+</maven2-moduleset>

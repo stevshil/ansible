@@ -28,3 +28,4 @@ jenkins_plugins:
   - ldap
   - email-ext
   - mailer
+  - maven-plugin

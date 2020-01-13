@@ -11,3 +11,4 @@
     - maven
     - installpkgs
     - ansible-role-jenkins
+    - jobs

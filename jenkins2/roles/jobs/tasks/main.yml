@@ -1,0 +1,36 @@
+- name: Create jenkins_jobs directory
+  file:
+    path: /etc/jenkins_jobs
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Create jobs location for all job yaml configs
+  file:
+    path: /var/lib/jenkins/ymljobs
+    owner: root
+    group: root
+    mode: '0755'
+    state: directory
+
+- name: Install Job builder scripting dir
+  template:
+    src: templates/jenkins_jobs.ini.j2
+    dest: /etc/jenkins_jobs/jenkins_jobs.ini
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy job configs to Jenkins
+  copy:
+    src: files/yml/
+    dest: /var/lib/jenkins/ymljobs
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Load Shell Example
+  shell: 'jenkins-jobs update *.yml'
+  args:
+    chdir: /var/lib/jenkins/ymljobs
