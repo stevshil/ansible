@@ -10,3 +10,6 @@ git submodule add https://octolinker-demo.now.sh/geerlingguy/ansible-role-java
 ```
 
 Alternatively install the modules with **ansible galaxy**
+
+Some notes on the Jenkins Job Builder Python module;
+* https://readthedocs.org/projects/jenkins-job-builder/downloads/pdf/stable/

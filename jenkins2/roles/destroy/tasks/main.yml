@@ -6,7 +6,6 @@
   debug:
     msg:
       - "Instance ID: {{ instance_id }}"
-      - "Region: {{ region }}"
 
 - name: Remove Jenkins server
   ec2:
@@ -20,6 +19,6 @@
 # This is done automatically
 - name: remove Jenkins server from inventory
   lineinfile:
-     dest: "{{ playbook_dir }}/environments/hosts"
+     dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
      state: absent
      regexp: "{{ groups['jenkins'][0] }}"

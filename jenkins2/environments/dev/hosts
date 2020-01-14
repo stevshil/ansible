@@ -5,3 +5,4 @@ local1 ansible_host=127.0.0.1 ansible_connection=local
 local2 ansible_host=127.0.0.1 ansible_connection=local
 
 [jenkins]
+ec2-34-248-175-213.eu-west-1.compute.amazonaws.com instance_id=i-063b90a3b130fe370 private_ip=172.30.2.168
