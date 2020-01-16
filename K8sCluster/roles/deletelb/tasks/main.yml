@@ -2,8 +2,11 @@
   elb_application_lb:
     name: "steve-k8s-{{ ec2env }}-lb"
     region: "{{ region }}"
-    wait: yes
     state: absent
+
+- name: Wait for ELB destruction as Ansible does not
+  pause:
+    minutes: 3
 
 - name: Destroy Target Group
   elb_target_group:
