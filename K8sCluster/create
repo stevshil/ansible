@@ -33,8 +33,8 @@ then
 		# For insecure registry;
 		# --extra-vars "docker_options=--insecure-registry=xxx.yyy:5000"
 		# Add a DNS LB to the cluster and DNS name with wild card for the apps
-		if [[ $? == 0 ]]
+		if (( $? == 0 ))
 		then
-			ansible-playbook -i environments/prod --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" addlb.yml
+			ansible-playbook -i environments/prod --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" postsetup.yml
 		fi
 fi

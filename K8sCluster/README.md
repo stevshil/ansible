@@ -24,12 +24,12 @@ The private key is supplied as an argument to the **runme** command.
 
 ### Running in normal mode
 
-```./runme ~/your/ssh/private/key```
+```./create ~/your/ssh/private/key```
 
 ### Running in Debug mode
 
-```./runme DEBUG ~/your/ssh/private/key```
+```./create DEBUG ~/your/ssh/private/key```
 
 ### Skip the ec2 instance build
 
-```./runme SKIP ~/your/ssh/private/key```
+```./create SKIP ~/your/ssh/private/key```
