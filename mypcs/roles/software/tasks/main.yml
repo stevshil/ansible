@@ -1,0 +1,5 @@
+- include: repos.yml
+- include: software.yml
+- include: tps.yml
+- include: nonrpm.yml
+- include: update.yml

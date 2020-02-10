@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=7.1
+Name=Firefox 7.1
+Comment=Firefox Web Browser 7.1
+Type=Application
+Exec=/usr/share/firefox71/firefox
+Icon=Firefox
+StartupNotify=false
+Terminal=false
+Categories=Internet;

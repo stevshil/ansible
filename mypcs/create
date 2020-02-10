@@ -1,0 +1,33 @@
+#!/bin/bash
+
+if [[ $UID != 0 ]]
+then
+	echo "This command must be ran as root"
+	exit 1
+fi
+
+# Check environment variables
+if [[ -z $STEVEPW ]]
+then
+	echo "Please set environment variable STEVEPW"
+	exit 2
+fi
+
+if [[ -z $TARAPW ]]
+then
+	echo "Please set environment variable TARAPW"
+	exit 2
+fi
+
+# Check if Ansible is installed
+dnf -y install ansible git
+
+if [[ $1 == DEBUG ]]
+then
+	ansible-playbook -vvvv -i inventory create.yml
+else
+	ansible-playbook -i inventory create.yml
+fi
+
+( sleep 2; echo "$STEVEPW"; sleep 2; echo "$STEVEPW") | passwd steve
+( sleep 2; echo "$TARAPW"; sleep 2; echo "$TARAPW") | passwd tara

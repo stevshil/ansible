@@ -6,4 +6,4 @@ Azure/vm/bin
 Azure/vm/include
 Azure/vm/lib
 Azure/vm/lib64
-**/hosts
+mypcs/**/sasl_passwd*

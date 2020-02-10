@@ -1,0 +1,33 @@
+- name: Add Window Desktop files to applications
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/applications/{{ item | basename }}"
+  with_fileglob: files/application.desktop/*
+
+- name: Create the autostart directory for Steve
+  file:
+    path: /home/steve/.config/autostart
+    state: directory
+    mode: 0755
+    
+- name: Add Start Up files to Steve
+  copy:
+    src: "{{ item }}"
+    dest: "/home/steve/.config/autostart/{{ item | basename }}"
+  with_fileglob: files/steve.autostart/*
+
+- name: Root cron
+  copy:
+    src: "{{ role_path }}/files/server/cron_root"
+    dest: /var/spool/cron/root
+    mode: 0600
+    owner: root
+    group: root
+
+- name: Steve cron
+  copy:
+    src: "{{ role_path }}/files/server/cron_steve"
+    dest: /var/spool/cron/steve
+    owner: steve
+    group: steve
+    mode: 0600

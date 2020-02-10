@@ -1,0 +1,52 @@
+- name: Install Groups
+  shell: "dnf -y group install '{{ item }}'"
+  with_items: "{{ groupsw }}"
+
+- name: Install system utilities
+  package:
+    name: "{{ systemsw }}"
+    state: latest
+
+- name: Install Desktop tools
+  package:
+    name: "{{ desktopsw }}"
+
+- name: Install Audio and Video
+  package:
+    name: "{{ avsw }}"
+    state: latest
+
+- name: Install Web and Comms
+  package:
+    name: "{{ websw }}"
+    state: latest
+
+- name: Install Graphical tools
+  package:
+    name: "{{ graphicsw }}"
+    state: latest
+
+- name: Install Office tools
+  package:
+    name: "{{ officesw }}"
+    state: latest
+
+- name: Install Development tools
+  package:
+    name: "{{ devtools }}"
+    state: latest
+
+- name: Install Virtual Environments
+  package:
+    name: "{{ virtualsw }}"
+    state: latest
+
+- name: WPS Office
+  package:
+    name: "{{ wpsoffice }}"
+    state: installed
+
+- name: Server software
+  package:
+    name: "{{ serversw }}"
+  when: ansible_all_ipv4_addresses[0] == server_ip

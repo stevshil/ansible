@@ -1,0 +1,12 @@
+- include: selinux.yml
+- include: services.yml
+- include: applications.yml
+
+- name: Configure grub
+  copy:
+    src: "{{ role_path }}/files/server/default_grub"
+    dest: /etc/default/grub
+    owner: root
+    group: root
+    mode: 0664
+  when: ansible_all_ipv4_addresses[0] == server_ip

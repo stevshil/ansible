@@ -1,0 +1,7 @@
+- name: Set SELinux to permissive on restarts
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Set current mode to permissive
+  shell: setenforce 0

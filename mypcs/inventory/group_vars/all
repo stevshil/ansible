@@ -1,0 +1,273 @@
+os_version: 31
+server_ip: 192.168.10.54
+
+ansible_become_method: sudo
+ansible_connection: local
+ansible_become_user: root
+ansible_become: yes
+
+wpsoffice: http://wdl1.pcfg.cache.wpscdn.com/wpsdl/wpsoffice/download/linux/9080/wps-office-11.1.0.9080.XA-1.x86_64.rpm
+
+groupsw:
+  - Development Tools
+  - LibreOffice
+  - Fonts
+  - Hardware Support
+
+systemsw:
+  - aircrack-ng
+  - airsnort
+  - amarok
+  - amarok-utils
+  - battray
+  - blueberry
+  - blueman
+  - bluez
+  - bluez-tools
+  - bluez-obexd
+  - caja
+  - caja-actions
+  - caja-actions-doc
+  - caja-core-extensions
+  - caja-extensions-common
+  - caja-image-converter
+  - caja-open-terminal
+  - caja-schemas
+  - caja-sendto
+  - caja-wallpaper
+  - caja-xattr-tags
+  - ethtool
+  - exfat-utils
+  - expect
+  - expect-devel
+  - fontconfig
+  - fonttools
+  - gparted
+  - gstreamer
+  - gstreamer1
+  - gstreamer1-plugins-bad-free
+  - gstreamer1-plugins-good
+  - gstreamer1-plugins-base
+  - gstreamer1-plugins-good-gtk
+  - gstreamer1-plugins-good-qt
+  - gstreamer1-plugins-ugly-free
+  - gstreamer-plugins-base
+  - gstreamer-plugins-espeak
+  - gstreamer-tools
+  - httpd
+  - httpd-filesystem
+  - httpd-tools
+  - http-parser
+  - hwdata
+  - hwinfo
+  - hw-probe
+  - ImageMagick
+  - isoimagewriter
+  - jq
+  - lpf
+  - lpsolve
+  - lshw
+  - lsdvd
+  - lsof
+  - mediawriter
+  - memtest86+
+  - net-tools
+  - nfs-utils
+  - nmap
+  - nmap-ncat
+  - ntfsprogs
+  - openssh-server
+  - phonon
+  - phonon-backend-gstreamer
+  - pluma
+  - tcpdump
+  - telnet
+  - traceroute
+  - tree
+  - unison240
+  - unison240-gtk
+  - unison240-text
+  - unrar
+
+desktopsw:
+  - cairo-dock
+  - cairo-dock-core
+  - cairo-dock-plug-ins
+  - cairo-dock-plug-ins-base
+  - cairo-dock-plug-ins-common
+  - cairo-dock-plug-ins-dbus
+  - cairo-dock-plug-ins-kde
+  - cairo-dock-plug-ins-xfce
+  - cairo-gobject
+  - cairomm
+  - kdm
+  - kdm-settings
+  - kdm-themes
+  - lightdm
+  - lightdm-autologin-greeter
+  - lightdm-gobject
+  - lightdm-gtk
+  - lightdm-gtk-greeter-settings
+  - lightdm-settings
+
+avsw:
+  - audacity-freeworld
+  - audacity-manual
+  - cheese
+  - cheese-libs
+  - dvdauthor
+  - exaile
+  - faac
+  - faad2
+  - ffmpeg
+  - ffmpeg-libs
+  - flac
+  - flac-libs
+  - kdenlive
+  - lame
+  - lame-libs
+  - lpf-spotify-client
+  - mac
+  - mac-libs
+  - mencoder
+  - mpg123
+  - mpg123-libs
+  - mplayer-common
+  - mkvtoolnix
+  - mkvtoolnix-gui
+  - mscore
+  - mscore-doc
+  - mscore-fonts
+  - pavucontrol
+  - pavumeter
+  - simplescreenrecorder
+  - soundkonverter
+  - twolame
+  - twolame-libs
+  - timidity++
+  - vlc
+  - vlc-core
+  - vlc-extras
+  - vorbis-tools
+
+websw:
+  - brave-browser
+  - brave-keyring
+  - filezilla
+  - firefox
+  - google-chrome-stable
+  - ktorrent
+  - otter-browser
+  - pacmanager
+  - skypeforlinux
+  - slack
+  - thunderbird
+  - transmission-common
+  - transmission-gtk
+  - wget
+  - wireshark
+  - wireshark-cli
+  - wireless-tools
+
+graphicsw:
+  - calligra-karbon
+  - digikam
+  - digikam-doc
+  - eog
+  - eom
+  - fontforge
+  - freecad
+  - freecad-data
+  - gimp
+  - gnome-screenshot
+  - hplip
+  - hplip-common
+  - hplip-gui
+  - hplip-libs
+  - mate-screenshot
+  - xsane
+  - xsane-common
+
+officesw:
+  - kchmviewer
+
+devtools:
+  - atom
+  - git
+  - java
+  - java-openjdk-headless
+  - rpmdevtools
+  - rpm-build
+
+virtualsw:
+  - docker-ce
+  - docker-ce-cli
+  - docker-compose
+  - freerdp
+  - kompose
+  - VirtualBox
+  - virtualbox-guest-additions
+  - VirtualBox-kmodsrc
+  - VirtualBox-server
+  - akmod-VirtualBox
+  - kmod-VirtualBox
+  - vagrant
+
+serversw:
+  - audex
+  - audiocd-kio
+  - audiocd-kio-doc
+  - brasero
+  - calibre
+  - cdparanoia
+  - cdrdao
+  - cdrskin
+  - dhcp-common
+  - dovecot
+  - dvdauthor
+  - dvd+rw-tools
+  - dvgrab
+  - epiphany
+  - evince
+  - evince-djvu
+  - fbreader
+  - FlightGear
+  - FlightGear-Atlas
+  - FlightGear-data
+  - fluidsynth
+  - h264enc
+  - k3b
+  - k3b-extras-freeworld
+  - nvidia-modprobe
+  - nvidia-persistenced
+  - nvidia-query-resource-opengl
+  - nvidia-query-resource-opengl-lib
+  - nvidia-settings
+  - nvidia-texture-tools
+  - nvidia-xconfig
+  - ogmrip
+  - ogmtools
+  - postfix
+  - rhythmbox
+  - shotwell
+  - SimGear
+  - speed-dreams
+  - speed-dreams-robots-base
+  - sshpass
+  - unifi
+  - unifi-data
+  - wodim
+  - x264
+  - x264-libs
+  - x265-libs
+  - xcompmgr
+  - xvidcore
+
+tpssw:
+  - mysql-workbench-community
+
+failedsw:
+  - ntfs
+  - gstreamer-plugins-bad-free
+  - gstreamer-plugins-good
+  - spotify-client

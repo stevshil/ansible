@@ -1,0 +1,14 @@
+- name: Check that TPS repo is available
+  wait_for:
+    connect_timeout: 15
+    timeout: 30
+    port: 80
+    host: 192.168.10.54
+  register: repook
+  ignore_errors: true
+
+- name: Install RPMs for TPS
+  package:
+    name: "{{ tpssw }}"
+    state: latest
+  when: repook is succeeded

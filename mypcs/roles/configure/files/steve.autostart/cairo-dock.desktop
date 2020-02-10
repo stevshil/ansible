@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec=cairo-dock
+Hidden=false
+X-MATE-Autostart-enabled=true
+Name[en_GB]=Cairo Dock
+Name=Cairo Dock
+Comment[en_GB]=
+Comment=

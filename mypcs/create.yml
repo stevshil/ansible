@@ -1,0 +1,7 @@
+# Create the Nodes
+- hosts: local
+  gather_facts: true
+  roles:
+    - software
+    - configure
+    - users

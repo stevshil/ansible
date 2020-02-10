@@ -1,0 +1,89 @@
+- name: Configure SSHD Laptop
+  copy:
+    src: "{{ role_path }}/files/laptop/sshd_config"
+    dest: /etc/ssh/sshd_config
+    mode: 0600
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] != server_ip
+
+- name: Configure SSHD Laptop
+  copy:
+    src: "{{ role_path }}/files/server/sshd_config"
+    dest: /etc/ssh/sshd_config
+    mode: 0600
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Configure HTTPD
+  copy:
+    src: "{{ role_path }}/files/server/httpd"
+    dest: /etc/
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Configure Postfix
+  copy:
+    src: "{{ role_path }}/files/server/postfix"
+    dest: /etc/
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Configure Dovecot
+  copy:
+    src: "{{ role_path }}/files/server/dovecot"
+    dest: /etc/
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Configure Docker Default
+  copy:
+    src: "{{ role_path }}/files/all/sysconfig_docker-storage"
+    dest: /etc/sysconfig/docker-storage
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure NFS Server
+  copy:
+    src: "{{ role_path }}/files/server/exports"
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Configure Firewalld FedoraWorkstation
+  copy:
+    src: "{{ role_path }}/files/server/firewalld/zones_FedoraWorkstation.xml"
+    dest: "/etc/firewalld/zones/FedoraWorkstation.xml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Configure Firewalld trusted
+  copy:
+    src: "{{ role_path }}/files/server/firewalld/zones_trusted.xml"
+    dest: "/etc/firewalld/zones/trusted.xml"
+    owner: root
+    group: root
+    mode: 0644
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Start Services
+  service:
+    name: "{{ item }}"
+    state: restart
+    enabled: yes
+  with_items:
+    - docker
+    - dovecot
+    - firewalld
+    - nfs-server
+    - postfix
+    - sshd
+  when: ansible_all_ipv4_addresses[0] == server_ip

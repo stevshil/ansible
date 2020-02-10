@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=TMule
+GenericName=Tmule Login
+Exec=/home/steve/bin/rdpemulef
+Terminal=false
+Type=Application
+Encoding=UTF-8
+Icon=/home/share/Icons/eMule-simple-icon.png
+Categories=Internet;System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;cmd;
+X-Desktop-File-Install-Version=0.23
