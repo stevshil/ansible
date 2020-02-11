@@ -75,9 +75,9 @@
   when: ansible_all_ipv4_addresses[0] == server_ip
 
 - name: Start Services
-  service:
+  systemd:
     name: "{{ item }}"
-    state: restart
+    state: started
     enabled: yes
   with_items:
     - docker

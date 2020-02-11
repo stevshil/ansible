@@ -9,7 +9,7 @@
     path: /home/steve/.config/autostart
     state: directory
     mode: 0755
-    
+
 - name: Add Start Up files to Steve
   copy:
     src: "{{ item }}"
@@ -31,3 +31,18 @@
     owner: steve
     group: steve
     mode: 0600
+
+- name: Set servers X11 configuration
+  copy:
+    src: "{{ role_path }}/files/server/xorg.conf"
+    dest: /etc/X11/xorg.conf
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Set server X11 config directory
+  copy:
+    src: "{{ role_path }}/files/server/xorg.conf.d/"
+    dest: /etc/X11/xorg.conf.d/
+    owner: root
+    group: root
