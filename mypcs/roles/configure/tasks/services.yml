@@ -32,6 +32,15 @@
     group: root
   when: ansible_all_ipv4_addresses[0] == server_ip
 
+- name: Set Server mail dir
+  file:
+    state: link
+    src: /Data/mail
+    dest: /var/spool/mail
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
+
 - name: Configure Dovecot
   copy:
     src: "{{ role_path }}/files/server/dovecot"
@@ -47,6 +56,15 @@
     owner: root
     group: root
     mode: 0644
+
+- name: Set servers Docker data dir
+  file:
+    state: link
+    src: /Data/var/lib/docker
+    dest: /var/lib/docker
+    owner: root
+    group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
 
 - name: Configure NFS Server
   copy:
