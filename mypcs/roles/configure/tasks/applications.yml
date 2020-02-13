@@ -39,6 +39,7 @@
     mode: 0644
     owner: root
     group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
 
 - name: Set server X11 config directory
   copy:
@@ -46,6 +47,7 @@
     dest: /etc/X11/xorg.conf.d/
     owner: root
     group: root
+  when: ansible_all_ipv4_addresses[0] == server_ip
 
 - name: Set youtube-dl link
   file:

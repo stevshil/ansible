@@ -100,9 +100,6 @@ systemsw:
   - telnet
   - traceroute
   - tree
-  - unison240
-  - unison240-gtk
-  - unison240-text
   - unrar
 
 desktopsw:
@@ -254,6 +251,7 @@ serversw:
   - h264enc
   - k3b
   - k3b-extras-freeworld
+  - mongodb-org-server
   - nvidia-modprobe
   - nvidia-persistenced
   - nvidia-query-resource-opengl
@@ -281,6 +279,9 @@ serversw:
 
 tpssw:
   - mysql-workbench-community
+  - unison240-2.40.102-8.fc21.x86_64
+  - unison240-gtk-2.40.102-8.fc21.x86_64
+  - unison240-text-2.40.102-8.fc21.x86_64
 
 failedsw:
   - ntfs

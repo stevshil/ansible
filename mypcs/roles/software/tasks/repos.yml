@@ -37,6 +37,14 @@
     gpgcheck: yes
     gpgkey: https://www.virtualbox.org/download/oracle_vbox.asc
 
+- name: Enable mongo
+  yum_repository:
+    name: mongodb-org-3.6
+    description: MongoDB Repository
+    baseurl: https://repo.mongodb.org/yum/redhat/8/mongodb-org/3.6/x86_64/
+    gpgcheck: yes
+    gpgkey: https://www.mongodb.org/static/pgp/server-3.6.asc
+
 - name: Enable TPS
   yum_repository:
     name: TPS

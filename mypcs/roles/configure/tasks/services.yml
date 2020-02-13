@@ -32,6 +32,18 @@
     group: root
   when: ansible_all_ipv4_addresses[0] == server_ip
 
+- name: Check if we are already symlink
+  stat:
+    path: /var/spool/mail
+  register: mailexists
+  when: when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Remove mail dir
+  file:
+    path: /var/spool/mail
+    absent: yes
+  when: mailexists.stat.isdir is defined and mailexists.stat.isdir and ansible_all_ipv4_addresses[0] == server_ip
+
 - name: Set Server mail dir
   file:
     state: link
@@ -92,6 +104,14 @@
     mode: 0644
   when: ansible_all_ipv4_addresses[0] == server_ip
 
+- name: Disable DNSMASQ service
+  copy:
+    src: "{{ role_path }}/files/server/killdns.service"
+    dest: /usr/lib/systemd/system/killdns.service
+    mode: 0644
+    owner: root
+    group: root
+
 - name: Start Services
   systemd:
     name: "{{ item }}"
@@ -101,6 +121,7 @@
     - docker
     - dovecot
     - firewalld
+    - killdns
     - nfs-server
     - postfix
     - sshd
