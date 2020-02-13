@@ -10,3 +10,11 @@
     group: root
     mode: 0664
   when: ansible_all_ipv4_addresses[0] == server_ip
+
+- name: Configure hosts file
+  template:
+    src: etc_hosts.j2
+    dest: /etc/hosts
+    owner: root
+    group: root
+    mode: 0644

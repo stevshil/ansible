@@ -6,6 +6,22 @@ ansible_connection: local
 ansible_become_user: root
 ansible_become: yes
 
+homehosts:
+  - name: tpsserv tpsserv.localdomain
+    ip: 192.168.10.54
+  - name: mediasys mediasys.localdomain
+    ip: 192.168.10.11
+  - name: printer printer.localdomain
+    ip: 192.168.10.102
+  - name: tmule
+    ip: 192.168.10.101
+  - name: dl
+    ip: 192.168.10.102
+  - name: wap
+    ip: 192.168.10.8
+  - name: router
+    ip: 192.168.10.1
+
 wpsoffice: http://wdl1.pcfg.cache.wpscdn.com/wpsdl/wpsoffice/download/linux/9080/wps-office-11.1.0.9080.XA-1.x86_64.rpm
 
 groupsw:
