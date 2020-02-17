@@ -1,27 +1,3 @@
-- name: Check if firefox72 exists
-  stat:
-    path: /usr/share/firefox72
-  register: ffexists
-
-- name: Firefox 7.2
-  unarchive:
-    src: https://download-installer.cdn.mozilla.net/pub/firefox/releases/72.0.2/linux-x86_64/en-US/firefox-72.0.2.tar.bz2
-    dest: /usr/share
-    remote_src: yes
-  when: ffexists.stat.exists == False
-
-- name: Rename firefox72
-  shell: mv /usr/share/firefox /usr/share/firefox72
-  when: ffexists.stat.exists == False
-
-- name: Link firefox72
-  file:
-    state: link
-    src: /usr/share/firefox72/firefox
-    dest: /usr/bin/firefox72
-    owner: root
-    group: root
-
 - name: Password Gorilla
   get_url:
     url: https://gorilla.dp100.com/downloads/gorilla1537_64.bin
