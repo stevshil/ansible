@@ -64,3 +64,8 @@
     dest: /usr/bin/get_iplayer
     owner: root
     group: root
+
+- name: Stop cgroup issue with Docker
+  shell:
+    - dnf install -y grubby
+    - grubby --update-kernel=ALL --args="systemd.unified_cgroup_hierarchy=0"

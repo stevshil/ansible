@@ -58,6 +58,7 @@ systemsw:
   - expect-devel
   - fontconfig
   - fonttools
+  - foremost
   - gparted
   - gstreamer
   - gstreamer1
@@ -98,6 +99,7 @@ systemsw:
   - pluma
   - tcpdump
   - telnet
+  - testdisk
   - traceroute
   - tree
   - unrar
@@ -225,6 +227,9 @@ virtualsw:
   - akmod-VirtualBox
   - kmod-VirtualBox
   - vagrant
+
+laptopsw:
+  - powertop
 
 serversw:
   - audex

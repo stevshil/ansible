@@ -22,7 +22,6 @@
     dest: /etc/
     owner: root
     group: root
-  when: ansible_all_ipv4_addresses[0] == server_ip
 
 - name: Configure Postfix
   copy:
