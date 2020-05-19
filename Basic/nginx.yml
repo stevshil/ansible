@@ -1,0 +1,94 @@
+- hosts: webserver
+  vars:
+    docroot: /var/www/html
+    docdata: "<html><h1>Hello Ansible</h1></html>"
+  tasks:
+    - name: Update Debian package repos
+      command: apt-get -y update
+      when: (ansible_os_family == "Debian")
+    - name: Set Package name for Apache for RHEL
+      set_fact:
+        package_name: httpd
+        mysql_server: mariadb-server
+        mysql_client: mariadb
+        mysql_service: mariadb
+        nginxroot: /usr/share/nginx/html
+        pip: python2-pip
+      when: (ansible_os_family == "RedHat")
+    - name: Set Package name for Apache for Ubuntu
+      set_fact:
+        package_name: apache2
+        mysql_server: mysql-server
+        mysql_client: mysql-client
+        mysql_service: mysql
+        nginxroot: /var/www/html
+        pip: python-pip
+      when: (ansible_os_family == "Debian")
+    - name: Uninstall Apache
+      package:
+        name: "{{ package_name }}"
+        state: absent
+    - name: Install NGINX Debian
+      package:
+        name: nginx
+        state: latest
+      when: (ansible_os_family == "Debian")
+    - name: Install NGINX RHEL
+      command: amazon-linux-extras install nginx1=latest -y
+      when: (ansible_os_family == "RedHat")
+    - name: Install MySQL
+      package:
+        name:
+          - "{{ mysql_server }}"
+          - "{{ mysql_client }}"
+          - "{{ pip }}"
+        state: latest
+    - name: Create the index.html file
+      copy:
+        content: "{{ docdata }}"
+        dest: "{{ nginxroot }}/index.html"
+    - name: Start and enable apache
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      with_items:
+        - nginx
+        - "{{ mysql_service }}"
+    - name: PyMySQL module required
+      pip:
+        name: PyMySQL
+        executable: /usr/bin/pip
+    - name: Ubuntu MySQL credentials
+      copy:
+        content: "[client]\nuser=root\npassword=\n"
+        dest: /root/.my.cnf
+      when: (ansible_os_family == "Debian")
+    - name: SQL Script to create tables
+      copy:
+        content: "CREATE DATABASE IF NOT EXISTS contacts; use contacts; CREATE TABLE IF NOT EXISTS contacts (name varchar(80) PRIMARY KEY, mobile varchar(20), postcode varchar(12));"
+        dest: /tmp/db.sql
+    - name: Create Contacts DB RHEL
+      mysql_db:
+        name: contacts
+        state: present
+        config_file: /root/.my.cnf
+        target: /tmp/db.sql
+      become: yes
+      become_user: root
+      when: (ansible_os_family == "RedHat")
+    - name: Create Contacts DB Ubuntu
+      shell: mysql -u root </tmp/db.sql
+      when: (ansible_os_family == "Debian")
+    - name: Create DB Petclinic user RHEL
+      mysql_user:
+        name: petclinic
+        password: petclinic
+        priv: '*.*:ALL'
+        state: present
+      when: (ansible_os_family == "RedHat")
+    - name: Create DB Petclinic user Debian
+      shell: mysql -u root -e "CREATE USER IF NOT EXISTS 'petclinic'@'%' IDENTIFIED BY 'petclinic'; GRANT ALL PRIVILEGES ON *.* TO 'petclinic'@'%';"
+      when: (ansible_os_family == "Debian")
+      become: yes
+      become_user: root
