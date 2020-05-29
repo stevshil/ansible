@@ -1,4 +1,7 @@
 ---
+dependencies:
+  - geerlingguy.java
+
 galaxy_info:
   author: geerlingguy
   description: Jenkins CI

@@ -1,0 +1,7 @@
+[submodule "ansible-role-java"]
+	path = AL/git-jenkins/roles/ansible-role-java
+	url = https://github.com/geerlingguy/ansible-role-java.git
+
+[submodule "ansible-role-jenkins"]
+	path = AL/git-jenkins/roles/ansible-role-jenkins
+	url = https://github.com/geerlingguy/ansible-role-jenkins.git
