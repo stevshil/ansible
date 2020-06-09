@@ -12,7 +12,7 @@ ec2subnet:
   eu-west-1: subnet-953a58cf
   us-west-2: subnet-582cb82f
 lbsubnets:
-  eu-west-1: subnet-953a58cf
+  eu-west-1: subnet-a94474e1
   us-west-2: subnet-90f98ff5
 ec2SG:
   eu-west-1: AcademySG
