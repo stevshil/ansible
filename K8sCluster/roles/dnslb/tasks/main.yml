@@ -83,9 +83,22 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "*.app.{{dnsprefix}}.{{ dnszone }}"
+    record: "{{dnsprefix}}.{{ dnszone }}"
     type: CNAME
     ttl: 60
     value:
       - "{{ groups['ELB'][0] }}"
+    overwrite: yes
+
+- name: Add DNS entry for applications
+  delegate_to: localhost
+  become: no
+  route53:
+    state: present
+    zone: "{{ dnszone }}"
+    record: "*.{{dnsprefix}}.{{ dnszone }}"
+    type: CNAME
+    ttl: 60
+    value:
+      - "{{dnsprefix}}.{{ dnszone }}"
     overwrite: yes

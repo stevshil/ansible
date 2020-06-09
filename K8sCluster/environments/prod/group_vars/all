@@ -35,5 +35,5 @@ mytags:
   EndDate: 20200131
 ansible_ssh_user: ec2-user
 dnszone: academy.grads.al-labs.co.uk
-dnsprefix: kube
+dnsprefix: app.kube
 dnszoneid:  Z07626429N74Z31VDFLI
