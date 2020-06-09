@@ -17,36 +17,33 @@
     state: absent
     region: "{{ region }}"
   with_items: "{{ groups['ELB'] }}"
+  when: "'ELB' in groups"
 
-- name: Check master record
-  route53_info:
-    type: A
-    query: record_sets
-    hosted_zone_id: "{{ dnszoneid }}"
-    start_record_name: "app.{{dnsprefix}}.{{dnszone}}"
-  register: lbdns
+- name: Check LB record
+  set_fact:
+    lbdns: "{{ lookup('dig','{{ec2env}}.{{dnsprefix}}.{{dnszone}}')}}"
 
-- name: Remove Master DNS entries
+- name: Remove Wildcard DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "*.{{dnsprefix}}.{{ dnszone }}"
+    record: "*.{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
     type: CNAME
     ttl: 60
     value:
       - "{{ groups['ELB'][0] }}"
-  when: lbdns is defined
+  when: lbdns != "NXDOMAIN"
 
-- name: Remove Master DNS entries
+- name: Remove LB DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "{{dnsprefix}}.{{ dnszone }}"
+    record: "{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
     type: CNAME
     ttl: 60
     value:
       - "{{ groups['ELB'][0] }}"
-  when: lbdns is defined
+  when: lbdns != "NXDOMAIN"
 
 - name: Remove ELB from inventory
   lineinfile:
@@ -59,7 +56,7 @@
 - name: Remove ELB Group from inventory
   lineinfile:
     path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
-    regexp: "^[ELB]"
+    regexp: "^\\[ELB\\]"
     state: absent
   ignore_errors: true
 

@@ -5,6 +5,8 @@
 #       - "{{item}}"
 #   #with_sequence: start=0 end={{ numworkers-1 }}
 #   with_items: "{{groups['kubeworker']}}"
+- name: Remove DNS records
+  include: dns.yml
 
 - name: Remove Workers
   ec2:
@@ -63,49 +65,6 @@
   file:
     path: "{{ playbook_dir }}/environments/{{ ec2env }}/kube.ini"
     state: absent
-
-# Check if name exists
-- name: Check master record
-  route53_info:
-    type: A
-    query: record_sets
-    hosted_zone_id: "{{ dnszoneid }}"
-    start_record_name: "kube.{{dnsprefix}}.{{dnszone}}"
-  register: masterdns
-
-# - name: Debug dns
-#   debug:
-#     msg: "masterdns {{ masterdns }}"
-
-- name: Remove Master DNS entries
-  route53:
-    state: absent
-    zone: "{{ dnszone }}"
-    record: "kube.{{dnsprefix}}.{{ dnszone }}"
-    type: A
-    ttl: 60
-    value:
-      - "{{ groups['kubemaster'][0] }}"
-  when: masterdns is defined
-
-- name: Check master record
-  route53_info:
-    type: A
-    query: record_sets
-    hosted_zone_id: "{{ dnszoneid }}"
-    start_record_name: "kubecontrol.{{dnsprefix}}.{{dnszone}}"
-  register: controllerdns
-
-- name: Remove Controller DNS entries
-  route53:
-    state: absent
-    zone: "{{ dnszone }}"
-    record: "kubecontrol.{{dnsprefix}}.{{ dnszone }}"
-    type: A
-    ttl: 60
-    value:
-      - "{{ groups['controller'][0] }}"
-  when: controllerdns is succeeded
 
 - debug:
     msg: "Check the inventory file environments/{{ec2env}}/hosts to make sure hosts are removed"
