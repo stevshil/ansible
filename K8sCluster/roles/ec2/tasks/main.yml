@@ -44,7 +44,7 @@
 
 - name: Wait for Controller update
   pause:
-    minutes: 1
+    minutes: 2
   when: groups['controller'] | length == 0
 
 - name: Add Controller to inventory
