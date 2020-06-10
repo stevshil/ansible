@@ -19,31 +19,41 @@
   with_items: "{{ groups['ELB'] }}"
   when: "'ELB' in groups"
 
-- name: Check LB record
-  set_fact:
-    lbdns: "{{ lookup('dig','{{dnsname}}')}}"
+- name: Get DNS records for Kubernetes
+  route53_info:
+    query: record_sets
+    type: CNAME
+    hosted_zone_id: "{{ dnszoneid }}"
+    region: "{{ region }}"
+    dns_name: "{{ dnsname }}"
+    start_record_name: "{{dnsname}}"
+    max_items: 1
+  register: dnsentries
+
+- name: DEBUG DNS
+  debug:
+    msg: "{{dnsentries}}"
 
 - name: Remove Wildcard DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
     record: "*.{{dnsname}}"
+    value: "{{dnsname}}"
     type: CNAME
     ttl: 60
-    value:
-      - "{{ groups['ELB'][0] }}"
-  when: lbdns != "NXDOMAIN"
+  with_items: "{{dnsentries}}"
+  ignore_errors: yes
 
 - name: Remove LB DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
     record: "{{dnsname}}"
+    value: "{{dnsentries.ResourceRecordSets[0].ResourceRecords[0].Value}}"
     type: CNAME
     ttl: 60
-    value:
-      - "{{ groups['ELB'][0] }}"
-  when: lbdns != "NXDOMAIN"
+  ignore_errors: yes
 
 - name: Remove ELB from inventory
   lineinfile:

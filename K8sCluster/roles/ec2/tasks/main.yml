@@ -24,36 +24,52 @@
   register: controller
 
 - name: Check if we have EIP for Controller
-  ec2_eip_facts:
+  ec2_eip_info:
     filters:
-      instance-id: "{{ item.instance_id }}"
+      instance-id: "{{ item.id }}"
   register: controller_eip
   with_items: "{{ controller.instances }}"
-  ignore_errors: true
+  ignore_errors: yes
 
 - name: Allocate EIP to Controller
   ec2_eip:
     device_id: "{{ item.id }}"
     region: "{{ region }}"
     reuse_existing_ip_allowed: yes
+    release_on_disassociation: yes
+    public_ipv4_pool: yes
     state: present
     in_vpc: yes
   with_items: "{{ controller.instances }}"
   register: eipcontroller
-  when: not controller_eip
+  when: controller_eip is failed
 
 - name: Wait for Controller update
   pause:
     minutes: 2
   when: groups['controller'] | length == 0
 
+- name: Get new controller info since Public IP changed
+  ec2_instance_info:
+    instance_ids:
+      - "{{ item.id }}"
+    region: "{{ region }}"
+  register: controllernew
+  when: groups['controller'] | length == 0
+  with_items: "{{ controller.instances }}"
+
+- name: DEBUG
+  debug:
+    msg: "{{item}}"
+  with_items: "{{ controllernew.results[0].instances }}"
+
 - name: Add Controller to inventory
   lineinfile:
     dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     insertafter: '^\[controller\]'
-    line: "{{ item.public_ip }} instance_id={{ item.id }} private_ip={{item.private_ip}} kubename=controller"
+    line: "{{ item.public_ip_address }} instance_id={{ item.instance_id }} private_ip={{item.private_ip_address}} kubename=controller"
   when: groups['controller'] | length == 0
-  with_items: "{{ controller.instances }}"
+  with_items: "{{ controllernew.results[0].instances }}"
 
 - name: Refresh Controller inventory
   meta: refresh_inventory
@@ -86,25 +102,6 @@
     newname:  { 'Name': "{{mytags.Name}}-Master" }
   when: groups['kubemaster'] | length == 0
   register: kubemaster
-
-- name: Check if we have EIP for Master
-  ec2_eip_facts:
-    filters:
-      instance-id: "{{ item.instance_id }}"
-  register: kubemaster_eip
-  with_items: "{{ kubemaster.instances }}"
-  ignore_errors: true
-
-- name: Allocate EIP to Master
-  ec2_eip:
-    device_id: "{{ item.id }}"
-    region: "{{ region }}"
-    reuse_existing_ip_allowed: yes
-    state: present
-    in_vpc: yes
-  with_items: "{{ kubemaster.instances }}"
-  register: eipmaster
-  when: not kubemaster_eip
 
 - name: Wait for Master update
   pause:
