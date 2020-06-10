@@ -1,4 +1,4 @@
-- name: Create DNS LB
+- name: Create DNS LB in Cluster
   command: /usr/local/bin/kubectl apply -f https://raw.githubusercontent.com/haproxytech/kubernetes-ingress/master/deploy/haproxy-ingress.yaml
 
 - name: Get LB 80 port
@@ -23,7 +23,7 @@
   delegate_to: localhost
   become: no
   elb_target_group:
-    name: "steve-k8s-{{ ec2env }}-tg"
+    name: "{{ mytags.Name }}-{{ ec2env }}-tg"
     protocol: http
     port: "{{ lbhttp.stdout | int }}"
     vpc_id: "{{ vpc_id[region] }}"
@@ -39,11 +39,11 @@
     wait: False
   with_items: "{{ groups['kubemaster'] }}"
 
-- name: Create ELB
+- name: Create ELB for Public app access
   delegate_to: localhost
   become: no
   elb_application_lb:
-    name: "steve-k8s-{{ ec2env }}-lb"
+    name: "{{ mytags.Name }}-{{ ec2env }}-lb"
     security_groups:
       - "{{ ec2SG[region] }}"
     subnets:
@@ -55,7 +55,7 @@
         Port: 80
         DefaultActions:
           - Type: forward
-            TargetGroupName: "steve-k8s-{{ ec2env }}-tg"
+            TargetGroupName: "{{ mytags.Name }}-{{ ec2env }}-tg"
     state: present
   register: lbdetail
 
@@ -83,7 +83,7 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "{{dnsprefix}}.{{ dnszone }}"
+    record: "{{dnsname}}"
     type: CNAME
     ttl: 60
     value:
@@ -96,9 +96,9 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "*.{{dnsprefix}}.{{ dnszone }}"
+    record: "*.{{dnsname}}"
     type: CNAME
     ttl: 60
     value:
-      - "{{dnsprefix}}.{{ dnszone }}"
+      - "{{dnsname}}"
     overwrite: yes

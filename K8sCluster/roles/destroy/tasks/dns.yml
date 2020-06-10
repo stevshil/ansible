@@ -1,13 +1,13 @@
 # Check if name exists
 - name: Check master record
   set_fact:
-    masterdns: "{{ lookup('dig','master.{{ec2env}}{{dnsprefix}}.{{dnszone}}')}}"
+    masterdns: "{{ lookup('dig','master.{{dnsname}}')}}"
 
 - name: Remove Master DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "master.{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
+    record: "master.{{dnsname}}"
     type: A
     ttl: 60
     value:
@@ -16,14 +16,14 @@
 
 - name: Check controller record
   set_fact:
-    controllerdns: "{{ lookup('dig','control.{{ec2env}}.{{dnsprefix}}.{{dnszone}}')}}"
+    controllerdns: "{{ lookup('dig','control.{{dnsname}}')}}"
   register: controllerdns
 
 - name: Remove Controller DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "control.{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
+    record: "control.{{dnsname}}"
     type: A
     ttl: 60
     value:

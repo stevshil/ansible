@@ -1,3 +1,19 @@
+# Parameters you must change
+dnsprefix: app.kube
+env: production
+region: eu-west-1
+sshkey: steveshillingacademyie
+ec2env: prod
+mytags:
+  Name: "{{ec2env}}-AL-Kubernetes"
+  Environment: "{{ ec2env }}"
+  Owner: Steve Shilling
+  Project: ALAcademy2019
+  StartDate: 20191220
+  EndDate: 20200131
+
+# Other configurable parameters
+dnsname: "{{ec2env}}.{{dnsprefix}}.{{dnszone}}"
 nummasters: 1
 numworkers: 2
 kubectlver: v1.17.0
@@ -21,19 +37,7 @@ ami:
   eu-west-1: ami-0ea3405d2d2522162
   us-east-1: ami-017b0e29fac27906b
   us-west-2: ami-0c5204531f799e0c6
-env: production
-region: eu-west-1
-sshkey: steveshillingacademyie
-ec2env: prod
 ansible_ssh_common_args: -o StrictHostKeyChecking=no
-mytags:
-  Name: AL-Kubernetes
-  Environment: "{{ ec2env }}"
-  Owner: Steve Shilling
-  Project: ALAcademy2019
-  StartDate: 20191220
-  EndDate: 20200131
 ansible_ssh_user: ec2-user
 dnszone: academy.grads.al-labs.co.uk
-dnsprefix: app.kube
 dnszoneid:  Z07626429N74Z31VDFLI

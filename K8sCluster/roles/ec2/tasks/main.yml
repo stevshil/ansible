@@ -19,7 +19,7 @@
     assign_public_ip: yes
     instance_tags: "{{ mytags | combine(newname) }}"
   vars:
-    newname: { 'Name': "AL-KubeController-{{ec2env}}" }
+    newname: { 'Name': "{{mytags.Name}}-Controller" }
   when: groups['controller'] | length == 0
   register: controller
 
@@ -83,7 +83,7 @@
     assign_public_ip: yes
     instance_tags: "{{ mytags | combine(newname) }}"
   vars:
-    newname:  { 'Name': "AL-KubeMaster-{{ec2env}}" }
+    newname:  { 'Name': "{{mytags.Name}}-Master" }
   when: groups['kubemaster'] | length == 0
   register: kubemaster
 
@@ -135,7 +135,7 @@
     assign_public_ip: yes
     instance_tags: "{{ mytags | combine(newname) }}"
   vars:
-    newname: { 'Name': "AL-KubeWorker-{{ec2env}}-{{item}}"}
+    newname: { 'Name': "{{mytags.Name}}-Worker-{{item}}"}
   with_sequence: count="{{ numworkers }}"
   when: groups['kubeworker'] | length < numworkers
   register: kubeworker
@@ -190,7 +190,7 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "control.{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
+    record: "control.{{dnsname}}"
     type: A
     ttl: 60
     value:
@@ -201,7 +201,7 @@
   route53:
     state: present
     zone: "{{ dnszone }}"
-    record: "master.{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
+    record: "master.{{dnsname}}"
     type: A
     ttl: 60
     value:

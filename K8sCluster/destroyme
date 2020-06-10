@@ -13,6 +13,12 @@ then
 	exit 2
 fi
 
+# Check ANSIBLEENV is not a path
+if ! echo "$ANSIBLEENV" | grep '/' >/dev/null 2>&1
+then
+	ANSIBLEENV="environments/$ANSIBLEENV"
+fi
+
 # This line supports the use of Virtual Environments to use the correct python while building ec2
 export PYTHON=$(which python)
 

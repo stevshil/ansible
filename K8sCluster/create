@@ -14,6 +14,12 @@ then
 	exit 2
 fi
 
+# Check ANSIBLEENV is not a path
+if ! echo "$ANSIBLEENV" | grep '/' >/dev/null 2>&1
+then
+	ANSIBLEENV="environments/$ANSIBLEENV"
+fi
+
 # This line supports the use of Virtual Environments to use the correct python while building ec2
 export PYTHON=$(which python)
 
@@ -48,9 +54,9 @@ if [[ $1 != SKIP ]]
 then
 	if [[ $1 == DEBUG ]]
 	then
-		ansible-playbook -vvvv -i environments/$ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" create.yml
+		ansible-playbook -vvvv -i $ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" create.yml
 	else
-		ansible-playbook -i environments/$ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" create.yml
+		ansible-playbook -i $ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" create.yml
 	fi
 fi
 
@@ -64,6 +70,6 @@ then
 		# Add a DNS LB to the cluster and DNS name with wild card for the apps
 		if (( $? == 0 ))
 		then
-			ansible-playbook -i environments/$ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" postsetup.yml
+			ansible-playbook -i $ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" postsetup.yml
 		fi
 fi

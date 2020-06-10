@@ -1,6 +1,6 @@
 - name: Destroy LB
   elb_application_lb:
-    name: "steve-k8s-{{ ec2env }}-lb"
+    name: "{{ mytags.Name }}-{{ ec2env }}-lb"
     region: "{{ region }}"
     state: absent
 
@@ -10,7 +10,7 @@
 
 - name: Destroy Target Group
   elb_target_group:
-    name: "steve-k8s-{{ ec2env }}-tg"
+    name: "{{ mytags.Name }}-{{ ec2env }}-tg"
     protocol: http
     vpc_id: "{{ vpc_id[region] }}"
     port: "{{hostvars[item].lbport}}"
@@ -21,13 +21,13 @@
 
 - name: Check LB record
   set_fact:
-    lbdns: "{{ lookup('dig','{{ec2env}}.{{dnsprefix}}.{{dnszone}}')}}"
+    lbdns: "{{ lookup('dig','{{dnsname}}')}}"
 
 - name: Remove Wildcard DNS entries
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "*.{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
+    record: "*.{{dnsname}}"
     type: CNAME
     ttl: 60
     value:
@@ -38,7 +38,7 @@
   route53:
     state: absent
     zone: "{{ dnszone }}"
-    record: "{{ec2env}}.{{dnsprefix}}.{{ dnszone }}"
+    record: "{{dnsname}}"
     type: CNAME
     ttl: 60
     value:
