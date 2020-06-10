@@ -30,6 +30,23 @@ If you're using Python venv then you should ensure you have installed the depend
 pip install -r requirements.txt
 ```
 
+# Checking out a specific version
+
+Find out the version tags;
+
+```
+$ git fetch --all --tags
+$ git tag -l
+```
+
+Checkout the version to use before running;
+
+```
+$ git checkout tags/k8sv2.1 -b k8sv2.1
+```
+
+Replacing v2.0 with the version you wish to use.
+
 # Running the build
 
 This module allows you to supply your own ansible environment, which can be a completely separate directory in your own GIT repository.  Set the **ANSIBLEENV** environment variable on your operating system to the location of your own environment.  To create the correct environment for your own revision make sure you copy the **environments/prod** directory and then make your changes.

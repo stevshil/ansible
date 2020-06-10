@@ -18,7 +18,7 @@
 
 - name: Remove Workers from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     regexp: "^{{item}}"
     state: absent
   with_items: "{{ groups['kubeworker'] }}"
@@ -34,7 +34,7 @@
 
 - name: Remove Master from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     regexp: "^{{ groups['kubemaster'][0] }}"
     state: absent
   when: groups['kubemaster'] | length > 0
@@ -49,21 +49,21 @@
 
 - name: Remove Controller from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     regexp: "^{{ groups['controller'][0] }}"
     state: absent
   when: groups['controller'] | length > 0
 
 - name: Remove Basion from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     regexp: "^{{ groups['bastion'][0] }}"
     state: absent
   when: groups['bastion'] | length > 0
 
 - name: Delete the remote inventory file kube.ini
   file:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/kube.ini"
+    path: "{{ lookup('env','ANSIBLEENV') }}/kube.ini"
     state: absent
 
 - debug:

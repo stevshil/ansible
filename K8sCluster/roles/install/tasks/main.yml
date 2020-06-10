@@ -20,7 +20,7 @@
 
 - name: Copy inventory to bastion
   copy:
-    src: "{{ playbook_dir }}/environments/{{ ec2env }}/kube.ini"
+    src: "{{ lookup('env', 'ANSIBLEENV')}}/kube.ini"
     dest: "/home/ec2-user/kubespray/inventory/mycluster/inventory.ini"
     owner: ec2-user
     group: ec2-user

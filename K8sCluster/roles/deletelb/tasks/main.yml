@@ -47,7 +47,7 @@
 
 - name: Remove ELB from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     regexp: "^{{item}}"
     state: absent
   with_items: "{{ groups['ELB'] }}"
@@ -55,7 +55,7 @@
 
 - name: Remove ELB Group from inventory
   lineinfile:
-    path: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    path: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     regexp: "^\\[ELB\\]"
     state: absent
   ignore_errors: true

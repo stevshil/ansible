@@ -49,7 +49,7 @@
 
 - name: Add Controller to inventory
   lineinfile:
-    dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     insertafter: '^\[controller\]'
     line: "{{ item.public_ip }} instance_id={{ item.id }} private_ip={{item.private_ip}} kubename=controller"
   when: groups['controller'] | length == 0
@@ -60,7 +60,7 @@
 
 - name: Add Bastion to inventory
   lineinfile:
-    dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     insertafter: '^\[bastion\]'
     line: "{{ groups['controller'][0] }} instance_id={{hostvars[item].instance_id}} private_ip={{hostvars[item].private_ip}} kubename=bastion"
   when: groups['bastion'] | length == 0
@@ -113,7 +113,7 @@
 
 - name: Add Master to inventory
   lineinfile:
-    dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     insertafter: '^\[kubemaster\]'
     line: "{{ item.public_ip }} instance_id={{ item.id }} private_ip={{item.private_ip}} kubename=master"
   when: groups['kubemaster'] | length == 0
@@ -151,7 +151,7 @@
 
 - name: Add Workers to inventory
   lineinfile:
-    dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     insertafter: '^\[kubeworker\]'
     line: "{{ item.instances[0].public_ip }} instance_id={{ item.instances[0].id }} private_ip={{item.instances[0].private_ip}} kubename=worker{{ workerno + 1 }}"
   when: groups['kubeworker'] | length == 0
@@ -232,4 +232,4 @@
 - name: Create kubecluster inventory file
   template:
     src: "{{ invfile }}"
-    dest: "{{ playbook_dir }}/environments/{{ ec2env }}/kube.ini"
+    dest: "{{ lookup('env','ANSIBLEENV') }}/kube.ini"

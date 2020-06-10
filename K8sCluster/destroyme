@@ -16,7 +16,7 @@ fi
 # Check ANSIBLEENV is not a path
 if ! echo "$ANSIBLEENV" | grep '/' >/dev/null 2>&1
 then
-	ANSIBLEENV="environments/$ANSIBLEENV"
+	ANSIBLEENV="$PWD/environments/$ANSIBLEENV"
 fi
 
 # This line supports the use of Virtual Environments to use the correct python while building ec2

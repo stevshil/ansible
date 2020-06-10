@@ -17,7 +17,7 @@ fi
 # Check ANSIBLEENV is not a path
 if ! echo "$ANSIBLEENV" | grep '/' >/dev/null 2>&1
 then
-	ANSIBLEENV="environments/$ANSIBLEENV"
+	ANSIBLEENV="$PWD/environments/$ANSIBLEENV"
 fi
 
 if [[ -n $DEBUG ]]

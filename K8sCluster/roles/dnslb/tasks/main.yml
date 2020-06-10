@@ -63,7 +63,7 @@
   delegate_to: localhost
   become: no
   lineinfile:
-    dest: "{{ playbook_dir }}/environments/{{ ec2env }}/hosts"
+    dest: "{{ lookup('env','ANSIBLEENV') }}/hosts"
     insertafter: EOF
     line: "{{ item }}"
   with_items:
