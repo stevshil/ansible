@@ -57,4 +57,4 @@ AWS_SESSION_TOKEN=$session_token
 export AWS_ACCESS_KEY AWS_SECRET_KEY AWS_SESSION_TOKEN
 #echo -e "ACCESS: $AWS_ACCESS_KEY\nSECRET: $AWS_SECRET_KEY\nTOKEN: $AWS_SESSION_TOKEN"
 
-ansible-playbook $DEBUG -i environments/$ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" $playbook
+ansible-playbook $DEBUG -i $ANSIBLEENV --extra-vars "ansible_ssh_private_key_file=$sshKeyFile" $playbook
