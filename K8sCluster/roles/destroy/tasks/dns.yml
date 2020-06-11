@@ -2,6 +2,8 @@
 - name: Check master record
   set_fact:
     masterdns: "{{ lookup('dig','master.{{dnsname}}')}}"
+    controldn: "{{ lookup('dig','control.{{dnsname}}')}}"
+  ignore_errors: yes
 
 - name: Remove Master DNS entries
   route53:
@@ -12,12 +14,7 @@
     ttl: 60
     value:
       - "{{ groups['kubemaster'][0] }}"
-  when: masterdns != "NXDOMAIN"
-
-- name: Check controller record
-  set_fact:
-    controllerdns: "{{ lookup('dig','control.{{dnsname}}')}}"
-  register: controllerdns
+  ignore_errors: yes
 
 - name: Remove Controller DNS entries
   route53:
@@ -28,4 +25,4 @@
     ttl: 60
     value:
       - "{{ groups['controller'][0] }}"
-  when: controllerdns != "NXDOMAIN"
+  ignore_errors: yes
