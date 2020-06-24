@@ -1,2 +1,0 @@
-- name: Update system software
-  shell: dnf -y update

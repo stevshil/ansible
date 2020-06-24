@@ -1,6 +1,0 @@
-- include: repos.yml
-- include: software.yml
-- include: perlmodules.yml
-- include: tps.yml
-- include: nonrpm.yml
-- include: update.yml

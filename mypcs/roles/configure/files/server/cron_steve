@@ -1,2 +1,0 @@
-0 */4 * * * /home/steve/bin/curip >/dev/null 2>&1
-*/5 * * * * /home/steve/bin/killdupcairo >/dev/null 2>&1

@@ -1,3 +1,0 @@
-#/home/steve/Documents/TPS/Work/Shutterstock/2019	192.168.10.0/255.255.255.0(rw,sync,fsid=0,no_root_squash,crossmnt,no_subtree_check,no_acl)
-/Data/eMule	192.168.10.0/255.255.255.0(rw,sync,fsid=0,no_root_squash,crossmnt,no_subtree_check,no_acl)
-/Slow/eMule/CopyToMedia	192.168.10.0/255.255.255.0(rw,sync,fsid=0,no_root_squash,crossmnt,no_subtree_check,no_acl)

@@ -1,8 +1,0 @@
-0 15 * * 1,4 /home/steve/scripts/weeklybkp >/dev/null 2>&1 # Backup system data weekly
-0 10 1 * * /home/steve/scripts/monthlybkp >/dev/null 2>&1 # Backup system configuration monthly
-0 14 * * 1 /home/web-apps/accounts-proj/scripts/latepay-email.pl #>/dev/null 2>&1
-40 14 * * * /root/scripts/EmailBkp >/dev/null 2>&1
-#00 * * * * /bin/kill -9 `/bin/ps -ef | grep tracker-extract | awk '{print $2}'` >/dev/null 2>&1
-0 11 * * 5 /home/steve/bin/ssh-attempts >/dev/null 2>&1 # Check illegal logins
-0 * * * 1-5 /home/steve/bin/dockerdbip # Get Docker Database IP
-#5 * * * 1-5 /home/web-apps/accounts-proj/scripts/setdbip # Get Docker Database IP
