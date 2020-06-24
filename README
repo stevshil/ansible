@@ -1,3 +1,5 @@
 Submodules
 
 https://git-scm.com/docs/git-submodule
+
+To use this repo you should git clone with the ```--recursive``` option
