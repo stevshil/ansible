@@ -5,3 +5,15 @@
 [submodule "ansible-role-jenkins"]
 	path = AL/git-jenkins/roles/ansible-role-jenkins
 	url = https://github.com/geerlingguy/ansible-role-jenkins.git
+
+[submodule "ansible-role-nginx"]
+	path = simplemonitoring/roles/nginx
+	url = https://github.com/geerlingguy/ansible-role-nginx.git
+
+[submodule "ansible-role-httpd"]
+	path = simplemonitoring/roles/httpd
+	url = https://github.com/bertvv/ansible-role-httpd.git
+
+[submodule "K8sClusterAnsible"]
+	path = K8sCluster
+	url = https://github.com/stevshil/K8sClusterAnsible.git
