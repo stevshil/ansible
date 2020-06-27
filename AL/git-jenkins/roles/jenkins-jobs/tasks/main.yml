@@ -1,9 +1,0 @@
-- name: Load Jobs
-  jenkins_job:
-    name: "{{ item }}"
-    config: "{{ lookup('file','templates/{{ item | lower }}.xml.j2')}}"
-    user: "{{ jenkins_admin_username }}"
-    password: "{{ jenkins_admin_password }}"
-    url: http://localhost:8080
-  with_items: "{{ jenkins_jobs }}"
-# url: "http://{{ groups['jenkins'][0] }}:8080"

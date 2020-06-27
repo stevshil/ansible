@@ -1,1 +1,0 @@
-thehostname: "{{ inventory_hostname }}"

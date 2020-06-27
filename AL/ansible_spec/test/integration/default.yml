@@ -1,5 +1,0 @@
----
-- name: My playbook test
-  hosts: localhost
-  roles:
-    - onetask

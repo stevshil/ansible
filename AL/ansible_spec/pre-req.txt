@@ -1,8 +1,0 @@
-On your laptop
-	gem install kitchen-ansible kitchen-puppet kitchen-vagrant serverspec
-
-Your VM image should be >= Ubuntu Xenial (16.04) or CentOs 7.2
-	This is because Ruby > 2 required
-	But Ubuntu does not support busser-ansible properly
-	On CentOS you will need to do an install of ruby and rubygems
-		Which you will see in the ansible role
