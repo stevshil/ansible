@@ -17,3 +17,7 @@
 [submodule "K8sCluster"]
 	path = K8sCluster
 	url = https://github.com/stevshil/K8sClusterAnsible.git
+
+[submodule "puppettrain"]
+	path = VMBuild/git/puppettrain
+	url = https://github.com/stevshil/puppettrain.git
