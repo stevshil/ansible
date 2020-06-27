@@ -29,3 +29,11 @@
 [submodule "puppettrain"]
 	path = VMBuild/git/puppettrain
 	url = https://github.com/stevshil/puppettrain.git
+
+[submodule "dockerreg"]
+	path = dockerreg
+	url = https://github.com/stevshil/dockerregAnsible.git
+
+[submodule "monitoring"]
+	path = simplemonitoring
+	url = https://github.com/stevshil/monitoringAnsible.git
