@@ -14,14 +14,6 @@
 	path = jenkins2/roles/ansible-role-jenkins
 	url = https://github.com/geerlingguy/ansible-role-jenkins.git
 
-[submodule "ansible-role-nginx"]
-	path = simplemonitoring/roles/nginx
-	url = https://github.com/geerlingguy/ansible-role-nginx.git
-
-[submodule "ansible-role-httpd"]
-	path = simplemonitoring/roles/httpd
-	url = https://github.com/bertvv/ansible-role-httpd.git
-
 [submodule "K8sCluster"]
 	path = K8sCluster
 	url = https://github.com/stevshil/K8sClusterAnsible.git
@@ -37,3 +29,9 @@
 [submodule "monitoring"]
 	path = simplemonitoring
 	url = https://github.com/stevshil/monitoringAnsible.git
+[submodule "monitoringAnsible"]
+	path = monitoringAnsible
+	url = https://github.com/stevshil/monitoringAnsible.git
+[submodule "dockerregAnsible"]
+	path = dockerregAnsible
+	url = https://github.com/stevshil/dockerregAnsible.git
