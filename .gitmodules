@@ -6,6 +6,14 @@
 	path = AL/git-jenkins/roles/ansible-role-jenkins
 	url = https://github.com/geerlingguy/ansible-role-jenkins.git
 
+[submodule "ansible-role-java-jenkins2"]
+	path = jenkins2/roles/geerlingguy.java
+	url = https://github.com/geerlingguy/ansible-role-java.git
+
+[submodule "ansible-role-jenkins2"]
+	path = jenkins2/roles/ansible-role-jenkins
+	url = https://github.com/geerlingguy/ansible-role-jenkins.git
+
 [submodule "ansible-role-nginx"]
 	path = simplemonitoring/roles/nginx
 	url = https://github.com/geerlingguy/ansible-role-nginx.git
