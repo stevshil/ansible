@@ -1,4 +1,0 @@
-gather_facts: no
-ansible_python_interpreter: "{{ lookup('env','PYTHON') }}"
-kubetype: t3a.xlarge
-controllertype: t2.micro

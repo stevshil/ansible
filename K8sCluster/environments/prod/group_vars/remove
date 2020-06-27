@@ -1,2 +1,0 @@
-gather_facts: no
-ansible_python_interpreter: "{{ lookup('env','PYTHON') }}"
