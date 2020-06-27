@@ -14,6 +14,6 @@
 	path = simplemonitoring/roles/httpd
 	url = https://github.com/bertvv/ansible-role-httpd.git
 
-[submodule "K8sClusterAnsible"]
+[submodule "K8sCluster"]
 	path = K8sCluster
 	url = https://github.com/stevshil/K8sClusterAnsible.git
