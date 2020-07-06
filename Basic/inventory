@@ -1,3 +1,3 @@
 [webserver]
-steveansible ansible_host=52.50.229.218 ansible_user=ec2-user ansible_ssh_private_key_file=~/.aws/automationlogic/steveshillingacademyie.pem ansible_ssh_common_args="-o StrictHostKeyChecking=no" ansible_become=true
-ubuntu ansible_host=3.250.139.201 ansible_user=ubuntu ansible_ssh_private_key_file=~/.aws/automationlogic/steveshillingacademyie.pem ansible_ssh_common_args="-o StrictHostKeyChecking=no" ansible_become=true
+steveansible ansible_host=52.50.229.218 ansible_user=ec2-user ansible_ssh_private_key_file=~/.aws/tps/steveshillingacademyie.pem ansible_ssh_common_args="-o StrictHostKeyChecking=no" ansible_become=true
+ubuntu ansible_host=3.250.139.201 ansible_user=ubuntu ansible_ssh_private_key_file=~/.aws/tps/steveshillingacademyie.pem ansible_ssh_common_args="-o StrictHostKeyChecking=no" ansible_become=true
