@@ -1,0 +1,17 @@
+- hosts: all
+  vars:
+    id: i-0b809917b1054cba2
+    ansible_python_interpreter: "{{ lookup('env','HOME')}}/pyenv/ansible/bin/python"
+    ansible_become: no
+  tasks:
+    - name: Get instance info
+      ec2_instance_info:
+        instance_ids:
+          - "{{id}}"
+        region: eu-west-1
+      register: ec2info
+
+    - name: Show data
+      debug:
+        msg: "{{item}}"
+      with_items: "{{ ec2info.instances[0].network_interfaces }}"

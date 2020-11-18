@@ -1,0 +1,67 @@
+- hosts: all
+  gather_facts: no
+  vars:
+    ansible_python_interpreter: "/PATHTOYOURPYTHON"
+    ansible_become: no
+    ansible_ssh_private_key_file: "{{ lookup('env','HOME')}}/YOURPATHTOSSHKEYFILE"
+    mykey: YOURAWSKEYPAIRNAME
+    subnet: subnet-953a58cf
+    sg: sg-091c83d3ecee7301e
+    img: ami-0bb3fad3c0286ebd5
+    region: eu-west-1
+    tags:
+      Name: Steve Test VM
+      StartDate: "{{ ansible_date_time.iso8601 }}"
+
+  tasks:
+    - name: Create instance
+      ec2_instance:
+        name: "Steves Instance"
+        key_name: "{{mykey}}"
+        vpc_subnet_id: "{{subnet}}"
+        instance_type: t2.micro
+        security_group: "{{sg}}"
+        image_id: "{{img}}"
+        tags: "{{tags}}"
+        region: "{{region}}"
+      register: ec2instance
+      when: groups['srv'] | length == 0
+
+    - name: Wait for a bit
+      pause:
+        minutes: 1
+      when: groups['srv'] | length == 0
+      with_items: "{{ ec2instance.instances }}"
+
+    - name: Set instance ID
+      set_fact:
+        id: "{{item.instance_id}}"
+      when: groups['srv'] | length == 0
+      with_items: "{{ ec2instance.instances }}"
+
+    - name: Set instance ID
+      set_fact:
+        id: "{{hostvars[groups['srv'][0]].id}}"
+      when: groups['srv'] | length > 0
+
+    - name: Add to inventory
+      lineinfile:
+        dest: "{{ playbook_dir }}/hosts"
+        insertafter: '^\[srv\]'
+        line: "{{ item.public_dns_name }} ansible_connection=local id={{ item.instance_id}}"
+      when: groups['srv'] | length == 0
+      with_items: "{{ ec2instance.instances }}"
+
+      # NOTE: anisble_connection=local is only required for this example don't use in the real world
+
+    - name: Get instance info
+      ec2_instance_info:
+        instance_ids:
+          - "{{id}}"
+        region: "{{region}}"
+      register: ec2info
+
+    - name: Show data
+      debug:
+        msg: "{{item}}"
+      with_items: "{{ ec2info.instances[0].network_interfaces }}"
