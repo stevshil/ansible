@@ -1,0 +1,21 @@
+- name: Set Package name for Apache for RHEL
+  set_fact:
+    package_name: httpd
+  when: (ansible_os_family == "RedHat")
+- name: Set Package name for Apache for Ubuntu
+  set_fact:
+    package_name: apache2
+  when: (ansible_os_family == "Debian")
+- name: Install Apache
+  package:
+    name: "{{ package_name }}"
+    state: latest
+- name: Create the index.html file
+  copy:
+    src: index.html
+    dest: "{{ docroot }}/index.html"
+- name: Start and enable apache
+  service:
+    name: "{{ package_name }}"
+    state: started
+    enabled: yes

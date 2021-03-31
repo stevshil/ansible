@@ -1,6 +1,7 @@
 - hosts: webserver
   vars:
     docroot: /var/www/html
+    docdata: "<html><h1>Hello Ansible</h1></html>"
   tasks:
     - name: Set Package name for Apache for RHEL
       set_fact:
@@ -16,7 +17,7 @@
         state: latest
     - name: Create the index.html file
       copy:
-        src: index.html
+        content: "{{ docdata }}"
         dest: "{{ docroot }}/index.html"
     - name: Start and enable apache
       service:
