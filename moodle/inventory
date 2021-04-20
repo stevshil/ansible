@@ -1,0 +1,2 @@
+[all]
+localhost ansible_host=localhost ansible_become=true

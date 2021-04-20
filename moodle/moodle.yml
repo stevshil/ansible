@@ -1,0 +1,37 @@
+- hosts: all
+  vars:
+    moodledata: /opt/moodledata
+    moodleroot: /var/www/html
+  tasks:
+    - name: Amazon Linux install PHP 7.4
+      shell: amazon-linux-extras install php7.4
+    - name: Install dependent software
+      package:
+        state: present
+        name:
+          - httpd
+          - git
+          - php-xml
+          - php-gd
+          - php-intl
+          - php-xmlrpc
+          - php-soap
+          - php-opcache
+    - name: Git clone moodle
+      git:
+        repo: git://git.moodle.org/moodle.git
+        dest: "{{ moodleroot }}"
+        update: no
+    - name: Change owner of moodle to apache
+      file:
+        path: "{{ moodleroot }}"
+        owner: apache
+        group: apache
+        recurse: yes
+        state: directory
+    - name: Create moodle data dir
+      file:
+        path: "{{ moodledata }}"
+        owner: apache
+        group: apache
+        state: directory

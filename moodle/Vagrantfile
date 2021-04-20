@@ -1,0 +1,43 @@
+Vagrant.configure("2") do |config|
+
+  config.vm.define :moodle do | moodle |
+    config.vm.provider "virtualbox" do |vb|
+       vb.memory = "6144"
+       vb.cpus = 2
+       vb.name = "Moodle"
+    end
+
+    if ENV['HOSTNAME'] == 'tpsserv.localdomain'
+      moodle.vm.network "public_network", ip: "192.168.10.123", bridge: "enp3s0"
+    elsif ENV['HOSTNAME'] == 'tpslaptop.localdomain'
+      moodle.vm.network "public_network", ip: "192.168.10.123", bridge: "wlp3s0"
+    else
+      moodle.vm.network "public_network", ip: "192.168.10.123"
+    end
+
+    moodle.vm.provision "shell", inline: "setenforce 0 && yum -y install python3 python3-pip python3-venv parted && python3 -m venv /root/ansible && source /root/ansible/bin/activate && pip install --upgrade pip && pip install ansible"
+    moodle.vm.provision "shell", inline: "yum -y install libselinux-python libselinux-python3 && source /root/ansible/bin/activate && ansible-playbook -i inventory /vagrant/moodle.yml"
+  end
+
+  config.vm.define :database do | db |
+    config.vm.provider "virtualbox" do |vb|
+       vb.memory = "2048"
+       vb.cpus = 2
+       vb.name = "MoodleDB"
+    end
+
+    if ENV['HOSTNAME'] == 'tpsserv.localdomain'
+      db.vm.network "public_network", ip: "192.168.10.124", bridge: "enp3s0"
+    elsif ENV['HOSTNAME'] == 'tpslaptop.localdomain'
+      db.vm.network "public_network", ip: "192.168.10.124", bridge: "wlp3s0"
+    else
+      db.vm.network "public_network", ip: "192.168.10.124"
+    end
+
+    db.vm.provision "shell", inline: "setenforce 0 && yum -y install python3 python3-pip python3-venv parted && python3 -m venv /root/ansible && source /root/ansible/bin/activate && pip install --upgrade pip && pip install ansible"
+    db.vm.provision "shell", inline: "yum -y install libselinux-python libselinux-python3 && source /root/ansible/bin/activate && ansible-playbook -i inventory /vagrant/mysql.yml"
+  end
+
+  config.vm.box = 'bento/centos-7.4'
+
+end

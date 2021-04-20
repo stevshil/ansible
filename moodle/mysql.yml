@@ -1,0 +1,30 @@
+- hosts: localhost
+  vars:
+    moodledata: /opt/moodledata
+    moodleroot: /var/www/html
+  tasks:
+    - name: Create mariadb repo
+      copy:
+        src: mariadb.conf
+        dest: /etc/yum.repos.d/mariadb.conf
+        owner: root
+        group: root
+    - name: Install mariadb 10+
+      package:
+        state: present
+        name: mariadb
+    - name: Enable and start mariadb
+      service:
+        name: mariadb
+        state: started
+        enabled: yes
+    - name: Create moodle database
+      mysql_db:
+        name: moodle
+        state: present
+    - name: Add moodle user
+      mysql_user:
+        name: moodle
+        password: moodle123
+        priv: '*.*:ALL,GRANT'
+        state: present
