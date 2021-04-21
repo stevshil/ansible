@@ -1,0 +1,18 @@
+- name: Install Grafana
+  include_tasks: grafana.yml
+  when: hostvars[inventory_hostname].systemname == "{{ prefix }}Grafana"
+
+- name: Install node_exporter
+  include_tasks: node_exporter.yml
+
+- name: Install Prometheus
+  include_tasks: prometheus.yml
+  when: hostvars[inventory_hostname].systemname == "{{ prefix }}Grafana"
+
+- name: Install MySQL
+  include_tasks: database.yml
+  when: hostvars[inventory_hostname].systemname == "{{ prefix }}Database"
+
+- name: Install PetClinic
+  include_tasks: petclinic.yml
+  when: hostvars[inventory_hostname].systemname == "{{ prefix }}PetClinic"

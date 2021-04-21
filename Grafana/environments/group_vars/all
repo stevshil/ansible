@@ -1,0 +1,22 @@
+region: eu-west-1
+prefix: steve-monitoring-
+ami:
+  eu-west-1: ami-0ffea00000f287d30
+vpc:
+  eu-west-1: vpc-4bb64132
+subnet:
+  eu-west-1: subnet-7bddfc1d
+secgrp:
+  eu-west-1: UserHomeIPs
+secgrpid:
+  eu-west-1: sg-091c83d3ecee7301e
+keypair: "{{ lookup('env','AWSKEYPAIR')}}"
+mytags:
+  Name: steveVM
+  Environment: training
+  Owner: "{{ lookup('env','LOGNAME')}}"
+  Project: Grafana Monitoring
+  StartDate: "{{ lookup('pipe', 'date +%Y%m%d')}}"
+  EndDate: "{{ lookup('pipe', 'date -d \"30 day\" +%Y%m%d')}}"
+ansible_ssh_private_key_file: "{{ lookup('env','SSHKEY')}}"
+ansible_ssh_common_args: -o StrictHostKeyChecking=no

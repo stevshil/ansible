@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. setup
+
+select host in Database PetClinic Grafana
+do
+  IP=$(grep $host environments/hosts | sed 's/.*ansible_host=\([0-9.]*\).*/\1/')
+  ssh -i $SSHKEY ec2-user@$IP
+done

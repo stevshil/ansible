@@ -1,0 +1,77 @@
+- name: Install MySQL
+  yum:
+    name:
+      - mariadb-server
+      - mariadb
+      - git
+    state: installed
+
+- name: Start MySQL
+  systemd:
+    name: mariadb
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: Get PetClinic DB schema
+  git:
+    repo: https://github.com/spring-projects/spring-petclinic.git
+    dest: /tmp/petclinic
+
+- name: Check if petclinic user exists
+  shell: mysql -e "select * from mysql.user where User='petclinic';" | grep petclinic | wc -l
+  register: pcuser
+
+- name: Create DB Petclinic user
+  shell: mysql -e "CREATE USER 'petclinic'@'%' IDENTIFIED BY 'petclinic'; GRANT ALL PRIVILEGES ON *.* TO 'petclinic'@'%'; CREATE USER 'petclinic'@'localhost' IDENTIFIED BY 'petclinic'; GRANT ALL PRIVILEGES ON *.* TO 'petclinic'@'localhost';"
+  when: pcuser.stdout | int == 0
+
+- name: Check if petclinic db exists
+  shell: mysql -e "show databases;" | grep petclinic | wc -l
+  register: pcdb
+
+- name: Create database
+  shell: mysql -e 'create database petclinic;'
+  when: pcdb.stdout | int ==  0
+
+- name: Check if petclinic schema exists
+  shell: mysql -e "use petclinic; show tables" | grep vets | wc -l
+  register: pcschema
+
+- name: Import schema
+  shell: mysql petclinic </tmp/petclinic/src/main/resources/db/mysql/schema.sql
+  when: pcschema.stdout | int == 0
+
+- name: Check if petclinic data exists
+  shell: mysql -e "use petclinic; select * from vets" | grep Rafael | wc -l
+  register: pcdata
+
+- name: Populate
+  shell: mysql petclinic </tmp/petclinic/src/main/resources/db/mysql/data.sql
+  when: pcdata.stdout | int == 0
+
+- name: Install mysqld_exporter
+  yum:
+    name: mysqld_exporter
+    state: installed
+
+- name: mysqld_exporter configuration
+  copy:
+    src: defaults_mysqld_exporter
+    dest: /etc/default/mysqld_exporter
+
+- name: Prometheus DB my.cnf
+  template:
+    src: prom_my.cnf.j2
+    dest: /var/lib/prometheus/.my.cnf
+    owner: prometheus
+    group: prometheus
+    mode: 0600
+  notify: Restart mysqld_exporter
+
+- name: Start mysqld_exporter
+  systemd:
+    name: mysqld_exporter
+    state: started
+    daemon_reload: yes
+    enabled: yes

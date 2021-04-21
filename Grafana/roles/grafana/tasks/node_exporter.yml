@@ -1,0 +1,20 @@
+- name: Check if prometheus repo exists
+  stat:
+    path: /etc/yum.repos.d/prometheus-rpm_release.repo
+  register: prorepo
+
+- name: Install prometheus yum repo
+  shell: curl -s https://packagecloud.io/install/repositories/prometheus-rpm/release/script.rpm.sh | bash
+  when: not prorepo.stat.exists
+
+- name: Install node_exporter
+  yum:
+    name: node_exporter
+    state: installed
+
+- name: Start node_exporter
+  systemd:
+    name: node_exporter
+    state: started
+    daemon_reload: yes
+    enabled: yes

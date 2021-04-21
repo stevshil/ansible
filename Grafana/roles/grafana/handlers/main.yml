@@ -1,0 +1,14 @@
+- name: Restart Prometheus
+  systemd:
+    name: prometheus
+    state: restarted
+
+- name: Restart Grafana
+  systemd:
+    name: grafana-server
+    state: restarted
+
+- name: Restart mysqld_exporter
+  systemd:
+    name: mysqld_exporter
+    state: restarted

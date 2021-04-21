@@ -1,0 +1,8 @@
+ansible_become_method: sudo
+ansible_connection: ssh
+ansible_become_user: root
+ansible_become: yes
+ansible_user: ec2-user
+remote_user: ec2-user
+ansible_python_interpreter: /usr/bin/python
+grafana_admin_password: secret123

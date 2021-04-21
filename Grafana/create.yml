@@ -1,0 +1,12 @@
+# Create the Nodes
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - ec2
+
+- hosts: VMS
+  become: yes
+  gather_facts: yes
+  roles:
+    - grafana

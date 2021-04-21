@@ -1,0 +1,54 @@
+- name: Create 3 VMs
+  ec2:
+    key_name: "{{ keypair }}"
+    instance_type: "{{ item.type }}"
+    image: "{{ ami[region] }}"
+    assign_public_ip: yes
+    wait: yes
+    region: "{{ region }}"
+    vpc_subnet_id: "{{ subnet[region] }}"
+    instance_tags: "{{ mytags | combine(item.tagname) }}"
+  with_items:
+    - Name: "{{ prefix }}Grafana"
+      type: t3a.medium
+      tagname:
+        Name: "{{ prefix }}Grafana"
+        ShortName: "Grafana"
+    - Name: "{{ prefix }}PetClinic"
+      type: t2.micro
+      tagname:
+        Name: "{{prefix}}PetClinic"
+        ShortName: "PetClinic"
+    - Name: "{{prefix}}Database"
+      type: t2.micro
+      tagname:
+        Name: "{{prefix}}Database"
+        ShortName: "Database"
+  register: vms
+  when: groups['VMS'] | length == 0
+
+- name: Wait for SSH on all VMs
+  delegate_to: "{{ vms.results[item].instances[0].public_dns_name }}"
+  remote_user: ec2-user
+  wait_for_connection:
+    delay: 30
+    timeout: 300
+  with_items:
+    - 0
+    - 1
+    - 2
+  when: groups['VMS'] | length == 0
+
+- name: Update hosts inventory
+  lineinfile:
+    dest: "{{ playbook_dir }}/environments/hosts"
+    insertafter: '^\[VMS\]'
+    line: "{{vms.results[item].instances[0].tags.ShortName}} ansible_host={{ vms.results[item].instances[0].public_ip }} instance_id={{ vms.results[item].instances[0].id }} private_ip={{ vms.results[item].instances[0].private_ip }} systemname={{vms.results[item].instances[0].tags.Name}}"
+  when: groups['VMS'] | length == 0
+  with_items:
+    - 0
+    - 1
+    - 2
+
+- name: Update hosts file
+  meta: refresh_inventory

@@ -1,0 +1,25 @@
+#!/bin/bash
+if [[ -z $AWS_DEFAULT_PROFILE ]]
+then
+  if [[ -e setup ]]
+  then
+    . setup
+  else
+    echo "Please set the following variables"
+    echo "AWS_DEFAULT_PROFILE - the profile to use from your credentials"
+    echo "SSHKEY - The pem file used to connect to the instances over ssh"
+    echo "AWSKEYPAIR - The name in AWS of your SSH key pair"
+    echo "You can add these to a file called setup"
+    exit 1
+  fi
+fi
+access_key=$(grep -A3 $AWS_DEFAULT_PROFILE ~/.aws/credentials | grep aws_access_key_id | awk '{print $3}')
+secret_key=$(grep -A3 $AWS_DEFAULT_PROFILE ~/.aws/credentials | grep aws_secret_access_key | awk '{print $3}')
+session_token=$(grep -A3 $AWS_DEFAULT_PROFILE ~/.aws/credentials | grep aws_session_token | awk '{print $3}')
+
+export AWS_ACCESS_KEY=$access_key
+export AWS_SECRET_KEY=$secret_key
+export AWS_SESSION_TOKEN=$session_token
+export AWS_DEFAULT_PROFILE SSHKEY AWSKEYPAIR
+
+ansible-playbook -i "$1" create.yml

@@ -1,0 +1,30 @@
+- name: Install docker
+  yum:
+    name: docker
+    state: installed
+
+- name: Docker configuration
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Start docker
+  systemd:
+    name: docker
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: Check that petclinic is not started
+  shell: docker ps | grep petclinic | wc -l
+  register: pcrunning
+
+- name: Start petclinic
+  shell: docker run -itd --name=petclinic -p 80:8080 -e DBUSERNAME=petclinic -e DBPASSWORD=petclinic -e DBSERVERNAME="{{hostvars['Database'].private_ip}}" steve353/petclinic
+  when: pcrunning.stdout | int == 0
+
+# Springboot prometheus - https://stackabuse.com/monitoring-spring-boot-apps-with-micrometer-prometheus-and-grafana/
+# Through actuator

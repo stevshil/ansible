@@ -1,0 +1,108 @@
+- name: Install grafana yum repo
+  yum_repository:
+    name: grafana
+    description: Grafana
+    baseurl: https://packages.grafana.com/oss/rpm
+    gpgcheck: yes
+    gpgkey: https://packages.grafana.com/gpg.key
+    sslverify: yes
+    sslcacert: /etc/pki/tls/certs/ca-bundle.crt
+    enabled: yes
+
+- name: Install grafana
+  yum:
+    name: grafana
+    state: installed
+
+- name: Set admin user
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: ^;admin_user = admin
+    line: admin_user = admin
+
+- name: Set admin password
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: ^;admin_password =
+    line: "admin_password = {{grafana_admin_password}}"
+  notify: Restart Grafana
+
+- name: Other configuration
+  lineinfile:
+    path: /etc/grafana/grafana.ini
+    regexp: ^;rendering_ignore_https_errors =
+    line: rendering_ignore_https_errors = true
+
+- name: Start grafana
+  systemd:
+    name: grafana-server
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+- name: Add Prometheus datasource
+  template:
+    src: datasource_default.yaml.j2
+    dest: /etc/grafana/provisioning/datasources/prometheus.yaml
+    owner: root
+    group: grafana
+    mode: 0640
+  notify: Restart Grafana
+
+# - name: Copy dashboard to server
+#   copy:
+#     src: prometheus-2-0-overview_rev2.json
+#     dest: /tmp
+
+- name: Add Prometheus node_exporter dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:3000
+    url_username: admin
+    url_password: "{{grafana_admin_password}}"
+    dashboard_id: "1860"
+    dashboard_revision: "22"
+    overwrite: yes
+    state: present
+    # folder: Prometheus
+    #path: /tmp/prometheus-2-0-overview_rev2.json
+    # dashboard_url: https://grafana.com/api/dashboards/3662/revisions/2/download
+  notify: Restart Grafana
+
+- name: Add MySQL dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:3000
+    url_username: admin
+    url_password: "{{grafana_admin_password}}"
+    dashboard_id: "6239"
+    dashboard_revision: "1"
+    overwrite: yes
+    state: present
+  notify: Restart Grafana
+
+- name: Add Docker and Host dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:3000
+    url_username: admin
+    url_password: "{{grafana_admin_password}}"
+    dashboard_id: "179"
+    dashboard_revision: "7"
+    overwrite: yes
+    state: present
+  notify: Restart Grafana
+
+- name: Upload Simple Docker dashboard
+  copy:
+    src: DockerSystem.json
+    dest: /tmp/DockerSystem.json
+
+- name: Simple Docker dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:3000
+    url_username: admin
+    url_password: "{{grafana_admin_password}}"
+    overwrite: yes
+    state: present
+    path: /tmp/DockerSystem.json
+  notify: Restart Grafana
+
+# https://grafana.com/docs/grafana/latest/administration/provisioning/#dashboards

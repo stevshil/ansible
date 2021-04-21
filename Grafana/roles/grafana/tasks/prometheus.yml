@@ -1,0 +1,29 @@
+- name: Install prometheus
+  yum:
+    name: prometheus
+    state: installed
+
+- name: Configure Prometheus to use node_exporter
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+    mode: 0644
+  notify: Restart Prometheus
+
+- name: Start prometheus
+  systemd:
+    name: prometheus
+    state: started
+    daemon_reload: yes
+    enabled: yes
+
+
+# https://www.howtoforge.com/tutorial/how-to-install-prometheus-and-node-exporter-on-centos-8/
+# From step 5
+
+# https://grafana.com/tutorials/
+
+# Adding target hosts
+# https://www.server-world.info/en/note?os=Ubuntu_18.04&p=prometheus&f=2#:~:text=Install%20%5Bprometheus-node-exporter,you'd%20like%20to%20add.&text=Add%20setting%20on%20Prometheus%20Server%20Config.&text=Access%20to%20the%20Prometheus%20Web,verify%20new%20nodes%20are%20listed.
