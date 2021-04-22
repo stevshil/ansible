@@ -582,7 +582,7 @@
           "expr": "irate(mysql_global_status_commands_total{release=\"$release\"}[5m]) > 0",
           "format": "time_series",
           "intervalFactor": 1,
-          "legendFormat": "{{ command }} - {{ release }}",
+          "legendFormat": "'{{' command '}}' - '{{' release '}}'",
           "refId": "A"
         }
       ],

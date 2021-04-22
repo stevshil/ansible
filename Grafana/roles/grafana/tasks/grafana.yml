@@ -95,7 +95,7 @@
 #     overwrite: yes
 #     state: present
 #   notify: Restart Grafana
-- name: Upload Simple Docker dashboard
+- name: Upload MySQL dashboard
   template:
     src: MySQLPrometheus.json.j2
     dest: /tmp/MySQLPrometheus.json
