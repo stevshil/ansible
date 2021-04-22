@@ -2,6 +2,3 @@
 local ansible_host=127.0.0.1 ansible_connection=local
 
 [VMS]
-Database ansible_host=34.248.90.237 instance_id=i-06e43cb62d5efeed9 private_ip=172.31.13.25 systemname=steve-monitoring-Database
-PetClinic ansible_host=34.253.211.199 instance_id=i-0d174fce44cf9beee private_ip=172.31.9.96 systemname=steve-monitoring-PetClinic
-Grafana ansible_host=34.243.50.37 instance_id=i-00e1bba9b269a1281 private_ip=172.31.3.250 systemname=steve-monitoring-Grafana
