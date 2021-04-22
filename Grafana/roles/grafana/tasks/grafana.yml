@@ -47,7 +47,13 @@
     owner: root
     group: grafana
     mode: 0640
-  notify: Restart Grafana
+  register: config
+
+- name: Restart Grafana
+  systemd:
+    name: grafana-server
+    state: restarted
+  when: config.changed
 
 # - name: Copy dashboard to server
 #   copy:
