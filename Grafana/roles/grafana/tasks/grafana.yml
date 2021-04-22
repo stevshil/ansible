@@ -74,17 +74,6 @@
     # dashboard_url: https://grafana.com/api/dashboards/3662/revisions/2/download
   notify: Restart Grafana
 
-- name: Add MySQL dashboard
-  community.grafana.grafana_dashboard:
-    grafana_url: http://localhost:3000
-    url_username: admin
-    url_password: "{{grafana_admin_password}}"
-    dashboard_id: "6239"
-    dashboard_revision: "1"
-    overwrite: yes
-    state: present
-  notify: Restart Grafana
-
 - name: Add Docker and Host dashboard
   community.grafana.grafana_dashboard:
     grafana_url: http://localhost:3000
@@ -96,9 +85,34 @@
     state: present
   notify: Restart Grafana
 
+# - name: Add MySQL dashboard
+#   community.grafana.grafana_dashboard:
+#     grafana_url: http://localhost:3000
+#     url_username: admin
+#     url_password: "{{grafana_admin_password}}"
+#     dashboard_id: "6239"
+#     dashboard_revision: "1"
+#     overwrite: yes
+#     state: present
+#   notify: Restart Grafana
 - name: Upload Simple Docker dashboard
-  copy:
-    src: DockerSystem.json
+  template:
+    src: MySQLPrometheus.json.j2
+    dest: /tmp/MySQLPrometheus.json
+
+- name: Add MySQL dashboard
+  community.grafana.grafana_dashboard:
+    grafana_url: http://localhost:3000
+    url_username: admin
+    url_password: "{{grafana_admin_password}}"
+    overwrite: yes
+    state: present
+    path: /tmp/MySQLPrometheus.json
+  notify: Restart Grafana
+
+- name: Upload Simple Docker dashboard
+  template:
+    src: DockerSystem.json.j2
     dest: /tmp/DockerSystem.json
 
 - name: Simple Docker dashboard

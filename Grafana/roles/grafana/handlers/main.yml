@@ -12,3 +12,8 @@
   systemd:
     name: mysqld_exporter
     state: restarted
+
+- name: Restart node_exporter
+  systemd:
+    name: node_exporter
+    state: restarted

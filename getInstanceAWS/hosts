@@ -2,3 +2,4 @@
 localhost ansible_connection=local
 
 [srv]
+ec2-54-247-39-254.eu-west-1.compute.amazonaws.com ansible_connection=local id=i-08582338911360a3f
