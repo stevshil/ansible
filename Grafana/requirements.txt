@@ -1,4 +1,4 @@
-ansible==3.2.0
+ansible==7.0.0
 ansible-base==2.10.8
 boto==2.49.0
 boto3==1.17.54
